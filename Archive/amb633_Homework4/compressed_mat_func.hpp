@@ -32,5 +32,6 @@ comp_r_mat construct_compressed_matrix( vector<vector<double>> input );
 comp_r_mat construct_compressed_matrix(vector<int>* i, vector<int>* j, vector<double>* val, int rowRank, int colRank);
 double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b );
 void print_comp_r_mat( comp_r_mat* mat_a );
+bool check_sum( comp_r_mat* mat, vector<double>* vec );
 
 #endif /* compressed_mat_func_hpp */

@@ -210,3 +210,21 @@ void print_comp_r_mat( comp_r_mat* mat_a ){
     cout << endl;
 }
 
+bool check_sum( comp_r_mat* mat, vector<double>* vec ){
+    bool check_sum = false;
+    
+    double mat_sum = 0;
+    for(int p=0; p<mat->value.size(); p++){
+        mat_sum = mat_sum + mat->value[p];
+    }
+    double vec_sum = 0;
+    for(int k=0; k<(*vec).size(); k++){
+        vec_sum = vec_sum + (*vec)[k];
+    }
+    double sum_dif = abs(mat_sum-vec_sum);
+    if(sum_dif <= (pow(10.0,-7))){
+        cout << sum_dif << endl;
+        check_sum=true;
+    }
+    return check_sum;
+}
