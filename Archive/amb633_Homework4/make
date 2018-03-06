@@ -1,0 +1,1 @@
+g++ -std=c++11 homework4.cpp compressed_mat_func.cpp -o homework4
