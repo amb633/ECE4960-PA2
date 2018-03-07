@@ -105,7 +105,7 @@ void rowPermute(comp_r_mat* A, int i, int j){
     A->value.erase(val_start+A->row_p[small_row], val_start+A->row_p[small_row+1]);
     A->col_id.erase(col_start+A->row_p[small_row], col_start+A->row_p[small_row+1]);
     
-    for(int i = small_row+1; i < A->row_p.size()-1; i++){
+    for(int i = small_row+1; i <= large_row; i++){
         A->row_p[i] = A->row_p[i] - small_row_count + large_row_count;
     }
     
@@ -193,17 +193,17 @@ double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b ){
 }
 
 void print_comp_r_mat( comp_r_mat* mat_a ){
-    cout << "This is the values in mat_a: " << endl;
+    cout << "This is the values in mat: " << endl;
     for (double n = 0; n<mat_a->value.size() ; n++){
         cout << mat_a->value[n] << ", ";
     }
     cout << endl;
-    cout << "This is the row_p in mat_a: " << endl;
+    cout << "This is the row_p in mat: " << endl;
     for (double n = 0; n<mat_a->row_p.size() ; n++){
         cout << mat_a->row_p[n] << ", ";
     }
     cout << endl;
-    cout << "This is the col_id in mat_a: " << endl;
+    cout << "This is the col_id in mat: " << endl;
     for (double n = 0; n<mat_a->col_id.size() ; n++){
         cout << mat_a->col_id[n] << ", ";
     }
@@ -227,4 +227,80 @@ bool check_sum( comp_r_mat* mat, vector<double>* vec ){
         check_sum=true;
     }
     return check_sum;
+}
+
+void reorderMat( comp_r_mat* input, comp_r_mat* reorder_A, comp_r_mat* reorder_B, int R, int C){
+    int row_id = R;
+    int max = 0;
+    int max_R = 0;
+    int max_C = 0;
+    
+    int v_counter = 0;
+    vector<int>* col_id = &(input->col_id);
+    vector<double>* value = &(input->value);
+    int row_start = input->row_p[R];
+    
+    for( int i = row_start; i<col_id->size(); i++){
+        int row_non_zero_end = input->row_p[row_id + 1];
+        if(i >= row_non_zero_end){
+            row_id++;
+        }
+        if((*col_id)[i] >= C){
+            if((*value)[i] > max){
+                max = (*value)[i];
+                v_counter = i;
+                max_R = row_id;
+                max_C = (*col_id)[i];
+            }
+        }
+    }
+    cout << "This is the next max value: " << max << " and row swap " << R << " with " << max_R << endl;
+    rowPermute(reorder_A, max_R, R);
+    rowPermute(reorder_B, max_R, R);
+    columnPermute(reorder_A, max_C, C);
+    
+}
+
+void columnPermute(comp_r_mat* A, int col1, int col2){
+    
+    for( int i= 1; i< A->row_p.size(); i++){
+        int row_values = A->row_p[i];
+        int swap1_id = -1, swap2_id = -1;
+        for(int j = A->row_p[i-1]; j < row_values; j++ ){
+            if(A->col_id[j] == col1){
+                swap1_id = j;
+            }else if(A->col_id[j] == col2){
+                swap2_id = j;
+            }
+        }
+        if( swap1_id >= 0 && swap2_id >= 0 ){
+            int hold_val = A->value[swap1_id];
+            
+            A->value[swap1_id] = A->value[swap2_id];
+            
+            A->value[swap2_id] = hold_val;
+        } else if( swap1_id >= 0 || swap2_id >= 0 ){
+            int non_zero_id = swap1_id;
+            int zero_id = swap2_id;
+            int col = col1;
+            int zero_col = col2;
+            if(swap2_id >=0 ){
+                non_zero_id = swap2_id;
+                zero_id = swap1_id;
+                col = col2;
+                zero_col = col1;
+            }
+            int value = A->value[non_zero_id];
+            for(int j = A->row_p[i-1]; j < row_values; j++ ){
+                if(A->col_id[j] >= zero_col || j == (row_values-1)){
+                    (A->col_id).erase(A->col_id.begin() + non_zero_id);
+                    (A->value).erase(A->value.begin() + non_zero_id);
+                    (A->col_id).insert(A->col_id.begin()+j, zero_col);
+                    (A->value).insert(A->value.begin()+j, value);
+                    break;
+                }
+                
+            }
+        }
+    }
 }

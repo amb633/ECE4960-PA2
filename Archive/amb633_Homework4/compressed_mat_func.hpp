@@ -33,5 +33,7 @@ comp_r_mat construct_compressed_matrix(vector<int>* i, vector<int>* j, vector<do
 double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b );
 void print_comp_r_mat( comp_r_mat* mat_a );
 bool check_sum( comp_r_mat* mat, vector<double>* vec );
+void reorderMat( comp_r_mat* input, comp_r_mat* reorder_A, comp_r_mat* reorder_B, int R, int C);
+void columnPermute(comp_r_mat* A, int col1, int col2);
 
 #endif /* compressed_mat_func_hpp */
