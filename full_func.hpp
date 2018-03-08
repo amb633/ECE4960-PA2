@@ -1,5 +1,5 @@
-#ifndef full_mat_func_hpp
-#define full_mat_func_hpp
+//#ifndef full_mat_func_hpp
+//#define full_mat_func_hpp
 
 #include <iostream>
 #include <cmath>
