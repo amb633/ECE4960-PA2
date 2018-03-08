@@ -16,17 +16,17 @@ void rowScale(comp_r_mat* A, int i, int j, double a){
     j_val_start = A->value.begin() + A->row_p[j];
     j_col_start = A->col_id.begin() + A->row_p[j];
     
-    for( size_t p = A->row_p[i]; p< A->row_p[i+1]; p++){
+    for( int p = A->row_p[i]; p< A->row_p[i+1]; p++){
         A->value[p] = a* A->value[p];
         row_i_val.push_back(A->value[p]);
         row_i_col.push_back(A->col_id[p]);
     }
     
-    for( size_t p = A->row_p[j]; p< A->row_p[j+1]; p++){
+    for( int p = A->row_p[j]; p< A->row_p[j+1]; p++){
         row_j_val.push_back(A->value[p]);
         row_j_col.push_back(A->col_id[p]);
     }
-    size_t size_j = row_j_val.size();
+    int size_j = row_j_val.size();
     int row_adj = 0;
     
     for(int i_id = 0; i_id < row_i_col.size(); i_id++){
@@ -83,13 +83,13 @@ void rowPermute(comp_r_mat* A, int i, int j){
     vector<double>::iterator val_start =A->value.begin();
     vector<int>::iterator col_start =A->col_id.begin();
     
-    size_t small_row_count = (A->row_p[small_row + 1] - A->row_p[small_row]);
-    size_t large_row_count = (A->row_p[large_row + 1] - A->row_p[large_row]);
+    int small_row_count = (A->row_p[small_row + 1] - A->row_p[small_row]);
+    int large_row_count = (A->row_p[large_row + 1] - A->row_p[large_row]);
     
     vector<double> row_l_val, row_s_val;
     vector<int> row_l_col, row_s_col;
     
-    for( size_t p = A->row_p[large_row]; p< A->row_p[large_row+1]; p++){
+    for( int p = A->row_p[large_row]; p< A->row_p[large_row+1]; p++){
         row_l_val.push_back(A->value[p]) ;
         row_l_col.push_back(A->col_id[p]);
     }
@@ -97,7 +97,7 @@ void rowPermute(comp_r_mat* A, int i, int j){
     A->value.erase(val_start+A->row_p[large_row], val_start+A->row_p[large_row+1]);
     A->col_id.erase(col_start+A->row_p[large_row], col_start+A->row_p[large_row+1]);
     
-    for( size_t p = A->row_p[small_row]; p< A->row_p[small_row+1]; p++){
+    for( int p = A->row_p[small_row]; p< A->row_p[small_row+1]; p++){
         row_s_val.push_back(A->value[p]);
         row_s_col.push_back(A->col_id[p]);
     }
@@ -119,9 +119,9 @@ void rowPermute(comp_r_mat* A, int i, int j){
 
 double retrieveElement( comp_r_mat* input, int row_id, int col_id){
     double element = 0;
-    size_t row_non_zero_start = input->row_p[row_id];
-    size_t row_non_zero_end = input->row_p[row_id + 1];
-    for(size_t p = row_non_zero_start; p< row_non_zero_end; p++){
+    int row_non_zero_start = input->row_p[row_id];
+    int row_non_zero_end = input->row_p[row_id + 1];
+    for(int p = row_non_zero_start; p< row_non_zero_end; p++){
         if( input->col_id[p] == col_id ){
             element = input->value[p];
             break;
@@ -132,17 +132,17 @@ double retrieveElement( comp_r_mat* input, int row_id, int col_id){
 
 
 
-comp_r_mat construct_compressed_matrix( vector<vector<double>> input ){
+comp_r_mat construct_compressed_matrix( vector<vector<double>>* input ){
     comp_r_mat mat_A;
-    size_t rows = input.size();
-    size_t columns = input[0].size();
+    int rows = (*input).size();
+    int columns = (*input)[0].size();
     int non_zeros = 0;
     mat_A.row_p.push_back(non_zeros);
     
     for (int i = 0; i<rows; i++ ){
         for (int j = 0; j<columns; j++ ){
-            if(input[i][j] != 0){
-                mat_A.value.push_back(input[i][j]);
+            if((*input)[i][j] != 0){
+                mat_A.value.push_back((*input)[i][j]);
                 mat_A.col_id.push_back(j);
                 non_zeros++;
             }
@@ -152,18 +152,19 @@ comp_r_mat construct_compressed_matrix( vector<vector<double>> input ){
     return mat_A;
 }
 
+//i - row pointers, j- column ids, val is non-zero values in matrix, row rank is number of rows, col is number of columns in matrix
 comp_r_mat construct_compressed_matrix(vector<int>* i, vector<int>* j, vector<double>* val, int rowRank, int colRank){
     comp_r_mat mat_A;
-    vector<size_t> row_p_init(rowRank+1, 0);
+    vector<int> row_p_init(rowRank+1, 0);
     mat_A.row_p = row_p_init;
     
     for( int p = 0; p<(*i).size(); p++){
-        size_t row_p_id = (*i)[p];
+        int row_p_id = (*i)[p];
         double val_p = (*val)[p];
         int col_p = (*j)[p];
         mat_A.value.insert(mat_A.value.begin() + mat_A.row_p[row_p_id], val_p);
         mat_A.col_id.insert(mat_A.col_id.begin() + mat_A.row_p[row_p_id], (col_p));
-        for( size_t r=row_p_id; r<mat_A.row_p.size(); r++){
+        for( int r=row_p_id; r<mat_A.row_p.size(); r++){
             mat_A.row_p[r]++;
         }
     }
@@ -231,7 +232,7 @@ bool check_sum( comp_r_mat* mat, vector<double>* vec ){
 
 void reorderMat( comp_r_mat* input, comp_r_mat* reorder_A, comp_r_mat* reorder_B, int R, int C){
     int row_id = R;
-    int max = 0;
+    double max = 0.0;
     int max_R = 0;
     int max_C = 0;
     
@@ -254,10 +255,16 @@ void reorderMat( comp_r_mat* input, comp_r_mat* reorder_A, comp_r_mat* reorder_B
             }
         }
     }
-    cout << "This is the next max value: " << max << " and row swap " << R << " with " << max_R << endl;
-    rowPermute(reorder_A, max_R, R);
-    rowPermute(reorder_B, max_R, R);
-    columnPermute(reorder_A, max_C, C);
+    if (R != max_R){
+        cout << "This is the next max value: " << max << " and row swap " << R << " with " << max_R << endl;
+        rowPermute(reorder_A, max_R, R);
+        rowPermute(reorder_B, max_R, R);
+    }
+    if(C != max_C){
+        cout << "This is the next max value: " << max << " and col swap " << C << " with " << max_C << endl;
+        columnPermute(reorder_A, max_C, C);
+    }
+
     
 }
 
@@ -274,7 +281,7 @@ void columnPermute(comp_r_mat* A, int col1, int col2){
             }
         }
         if( swap1_id >= 0 && swap2_id >= 0 ){
-            int hold_val = A->value[swap1_id];
+            double hold_val = A->value[swap1_id];
             
             A->value[swap1_id] = A->value[swap2_id];
             
@@ -290,7 +297,7 @@ void columnPermute(comp_r_mat* A, int col1, int col2){
                 col = col2;
                 zero_col = col1;
             }
-            int value = A->value[non_zero_id];
+            double value = A->value[non_zero_id];
             for(int j = A->row_p[i-1]; j < row_values; j++ ){
                 if(A->col_id[j] >= zero_col || j == (row_values-1)){
                     (A->col_id).erase(A->col_id.begin() + non_zero_id);

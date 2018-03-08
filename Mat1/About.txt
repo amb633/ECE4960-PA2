@@ -1,0 +1,1 @@
+mat1 is stored in CSR format with row pointer, column indices and values saved in 'rowPtr.csv', 'colInd.csv' and 'value.csv' respectively. The rank of matrix is 5000. Number of nonzero entries is 253677.
