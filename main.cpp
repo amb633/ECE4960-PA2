@@ -17,7 +17,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    ifstream rowPtr_file("/Users/arianabruno/Desktop/ECE4960/ProgrammingAssignments/ECE4960-PA2/Mat1/rowPtr.csv");
+    ifstream rowPtr_file("./Mat1/rowPtr.csv");
     int row_value;
     vector<int> row_ptr;
     while(rowPtr_file >> row_value){
@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
     }
     cout << "This is the number of row_ptrs in Mat 1: " << row_ptr.size() << endl;
     
-    ifstream values_file("/Users/arianabruno/Desktop/ECE4960/ProgrammingAssignments/ECE4960-PA2/Mat1/value.csv");
+    ifstream values_file("./Mat1/value.csv");
     double value;
     vector<double> values;
     while(values_file >> value){
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     }
     cout << "This is the number of non_zero values in Mat 1: " << values.size() << endl;
     
-    ifstream col_file("/Users/arianabruno/Desktop/ECE4960/ProgrammingAssignments/ECE4960-PA2/Mat1/colInd.csv");
+    ifstream col_file("./Mat1/colInd.csv");
     int col_id;
     vector<int> cols;
     while(col_file >> col_id){
