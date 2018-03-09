@@ -15,7 +15,7 @@ namespace compressed{
 
 	typedef struct Compressed_Row_Matrix{
 		vector<double> value;
-    	vector<size_t> row_p;
+    	vector<int> row_p;
     	vector<int> col_id;
     	int noofRows;
     	int noofCols;
