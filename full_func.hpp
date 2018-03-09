@@ -21,6 +21,7 @@ namespace full{
 		vector<double> value;
 		vector<size_t> rank;		
 	} full_diag;*/
+
 	double retrieveElement( vector<vector<double>>* input, int row_id, int col_id);
 	double productAx( vector< vector<double>>* input, vector<double>* x, vector<double>* b);
 	void rowScale(vector< vector<double>>* input, int i, int j, double a );
@@ -32,6 +33,7 @@ namespace full{
 	void columnPermute(vector< vector<double>>* A, int col1, int col2);
 
 	int changeElement( vector< vector<double>>* A , int rowInd , int colInd , double newValue );
+	int scalarMultiple( vector< vector<double>>* A , double scale );
 	int copyMatrix( vector< vector<double>>* C , vector< vector<double>>* A );
 	int decomposeMatrix( vector<double>* D , vector< vector<double>>* LU , vector< vector<double>>* A );
 	int jacobiSolver( vector<double>* X , vector<double>* D , vector< vector<double>>* LU , vector<double>* B );

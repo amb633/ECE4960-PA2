@@ -1,23 +1,40 @@
 #include "compressed_func.hpp"
 
 void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
+    /* takes row a*row i and adds it to row j in matrix A
+     * changes the original matrix; no copy made 
+     */
 
 }
 
 void compressed::rowPermute(comp_r_mat* A, int i, int j){
+    /* swaps rows i and j in matrix A 
+     * changes the original matrix; no copy made 
+     */
+
 
 }
 
 double compressed::retrieveElement( comp_r_mat* input, int row_id, int col_id){
-	double element = 0;
+	/* returns the value stored at specified row_id and col_id */
+    
+
+    double element = 0.0;
+
+    // find cumulative number of elements in previous row
     int row_non_zero_start = input->row_p[row_id];
+    // find cumulative number of elements in current row
     int row_non_zero_end = input->row_p[row_id + 1];
+
+    // iterate over current row, until desired col is found
+    // if found, return value stored in that index
     for(int p = row_non_zero_start; p< row_non_zero_end; p++){
         if( input->col_id[p] == col_id ){
             element = input->value[p];
             break;
         }
     }
+    // if not found, return 0
     return element;
 }
 
@@ -269,12 +286,14 @@ int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* A
 }
 
 int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* vec ){
+    /* calculates the matrix product of A and vec and stores it in result
+     * only works for vector products
+     */
     for ( int i = 0 ; i < A->noofRows ; i++ ){
         double pdt = 0.0;
 		for ( int j = 0 ; j < A->noofCols ; j++ ){
 			double temp = retrieveElement( A , i , j );
 			pdt += temp*(vec->value[j]);
-			//cout << result->value[i] << endl;
 		}
         result->value[i] = pdt;
 	}
