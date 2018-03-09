@@ -269,12 +269,14 @@ int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* A
 }
 
 int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* vec ){
-	for ( int i = 0 ; i < A->noofRows ; i++ ){
+    for ( int i = 0 ; i < A->noofRows ; i++ ){
+        double pdt = 0.0;
 		for ( int j = 0 ; j < A->noofCols ; j++ ){
 			double temp = retrieveElement( A , i , j );
-			result->value[i] += temp*(vec->value[j]);
+			pdt += temp*(vec->value[j]);
 			//cout << result->value[i] << endl;
 		}
+        result->value[i] = pdt;
 	}
 	return 0;
 }
@@ -296,8 +298,12 @@ int compressed::jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , c
 
 }
 
-int compressed::calculateNorm( double& norm , vector<double>* v , vector<double>* Ax ){
-//    TODO
+int compressed::calculateNorm( double& norm , comp_diag* v , comp_diag* Ax ){
+    double squareSum = 0.0;
+    for ( int i = 0 ; i < v->rank ; i++ ){
+        double temp = v->value[i] - Ax->value[i];
+        squareSum +=temp*temp;
+    }
+    norm = sqrt( squareSum );
     return 0;
-
 }

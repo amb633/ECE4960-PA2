@@ -44,6 +44,6 @@ namespace compressed{
 	int decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* AS );
 	int matrixProduct ( comp_diag* result , comp_r_mat* A , comp_diag* vec);
 	int jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , comp_diag* B );
-	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );
+	int calculateNorm( double& norm , comp_diag* v , comp_diag* Ax );
 
 }

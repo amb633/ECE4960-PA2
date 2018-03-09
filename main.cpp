@@ -93,17 +93,27 @@ int main(int argc, char const *argv[])
     compressed::comp_diag DC;
     compressed::decomposeMatrix( &DC , &LUC , &mat1 );
     
+    compressed::comp_diag matProd;
+    matProd.rank = mat_b.rank;
+    for ( int i = 0 ; i < matProd.rank ; i++ ){
+    	matProd.value.push_back(0.0);
+    }
+    double normPrev = 2;
+    double normCurrent = 1;
     int counter = 0;
-    for ( int j = 0 ; j < 50 ; j++ )
-    {
-        counter++;
+
+    //for ( int j = 0 ; j < 50 ; j++ ) {
+    while( abs(normCurrent - normPrev) > 1e-10 ){
+    	normPrev = normCurrent;
         compressed::jacobiSolver( &mat_x , &DC , &LUC , &mat_b );
+        compressed::matrixProduct( &matProd , &mat1 , &mat_x );
+        compressed::calculateNorm( normCurrent , &mat_b , &matProd );
         cout << counter << " : " ;
-        for ( int i = 0 ; i < 5 ; i++ ){
+        for ( int i = 4000 ; i < 4005 ; i++ ){
             cout << mat_x.value[i] << "   ";
         }
-        cout << endl;
+        cout << " : " << normCurrent << endl;
+        counter++;
     }
-    
     
 }
