@@ -79,12 +79,12 @@ int main(int argc, char const *argv[])
    
    	// testing matrix decomposition
    	compressed::comp_r_mat LUC;
-   	compressed::comp_diag DC;
+   	vector<double> DC;
    	compressed::decomposeMatrix( &DC , &LUC , &mat_a );
 
    	cout << endl << "Diagonal Elements : " << endl;
    	for ( int i = 0 ; i < RANK ; i++ ){
-    	cout << DC.value[i] << "   ";
+    	cout << DC[i] << "   ";
    	}
    	cout << endl;
 
@@ -96,45 +96,45 @@ int main(int argc, char const *argv[])
        	cout << endl;
    	}
 
-   	compressed::comp_diag B; 
-   	B.value.push_back(1.0); 
-   	for ( int i = 0 ; i < RANK ; i++ ){
-       	B.value.push_back(0.0);
+   	vector<double> B; 
+   	B.push_back(1.0); 
+   	for ( int i = 0 ; i < RANK - 1 ; i++ ){
+       	B.push_back(0.0);
    	}
 
    	cout << endl << "B Vector Elements : " << endl;
-   	for ( int i = 0 ; i < RANK ; i++ ){
-       	cout << B.value[i] << "   ";
+   	for ( int i = 0 ; i < B.size() ; i++ ){
+       	cout << B[i] << "   ";
    	}
    	cout << endl;
 
-   	compressed::comp_diag X;
-   	X.value.push_back(-0.25);
-   	for (int i = 0; i < RANK ; i++ ) {
-       	X.value.push_back(0.0);
+   	vector<double> X;
+   	X.push_back(-0.25);
+   	for (int i = 0; i < RANK - 1 ; i++ ) {
+       	X.push_back(0.0);
    	}
 
    	cout << endl << "X Vector Elements : " << endl;
    	for ( int i = 0 ; i < RANK ; i++ ){
-       	cout << X.value[i] << "   ";
+       	cout << X[i] << "   ";
    	}
    	cout << endl;
 
    	// testing matrix product
-   	compressed::comp_diag mp;
+   	vector<double> mp;
    	for ( int i = 0 ; i < RANK ; i++ ){
-       	mp.value.push_back(0.0);
+       	mp.push_back(0.0);
    	}
    	compressed::matrixProduct( &mp , &mat_a , &B );
    	cout << endl << "mp Vector Elements : " << endl;
    	for ( int i = 0 ; i < RANK ; i++ ){
-       	cout << mp.value[i] << "   ";
+       	cout << mp[i] << "   ";
    	}
    	cout << endl << endl;
 
    	// reset mp to all zeros
    	for ( int i = 0 ; i < RANK ; i++ ){
-   		mp.value[i] = 0.0;
+   		mp[i] = 0.0;
    	}
 
    	// Jacobi Solver
@@ -151,11 +151,11 @@ int main(int argc, char const *argv[])
 
        	cout << counter << " : " ;
        	for ( int i = 0 ; i < 5 ; i++ ){
-           	cout << X.value[i] << "   ";
+           	cout << X[i] << "   ";
        	}
        	cout << " : " << normCurrent << endl;
        	counter++;
-   	}
+   	} 
 
    	cout<<endl;
    	return 0;

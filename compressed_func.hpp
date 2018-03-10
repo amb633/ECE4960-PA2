@@ -19,10 +19,6 @@ namespace compressed{
     	vector<int> col_id;
 	} comp_r_mat;
 
-	typedef struct Compressed_Diagonal_Matrix{
-		vector<double> value;	
-	} comp_diag;
-
 	/* returns row_j = row_j + a*row_i */
 	void rowScale( comp_r_mat* A , int i , int j , double a );
 
@@ -53,15 +49,15 @@ namespace compressed{
 	int copyMatrix( comp_r_mat* C , comp_r_mat* A );
 
 	/* decompose AS matrix into diagonal elements (stored in DS) and non-diagonal elements (stored in LUS) */
-	int decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* AS );
+	int decomposeMatrix( vector<double>* DS , comp_r_mat* LUS , comp_r_mat* AS );
 
 	/* calculates the matrix product of A and vec and stores it in result */
-	int matrixProduct ( comp_diag* result , comp_r_mat* A , comp_diag* vec);
+	int matrixProduct ( vector<double>* result , comp_r_mat* A , vector<double>* vec);
 
 	/* jacobi solver function */
-	int jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , comp_diag* B );
+	int jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_mat* LUS , vector<double>* B );
 	
 	/* calculate norm of v - Ax */
-	int calculateNorm( double& norm , comp_diag* v , comp_diag* Ax );
+	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );
 
 }

@@ -258,7 +258,7 @@ int compressed::copyMatrix( comp_r_mat* C , comp_r_mat* A ){
 
 }
 
-int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* AS ){
+int compressed::decomposeMatrix( vector<double>* DS , comp_r_mat* LUS , comp_r_mat* AS ){
 	/* decomposes matrix AS into its diagonal elements (stored in DS)
 	 * and its lower upper form (stored in LUS)
 	 * create all three structures in main, and pass in as function handles
@@ -272,7 +272,7 @@ int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* A
 
 	for ( int i = 0 ; i < rank ; i++ ){
 		// extract the diagonal elements to DS
-		DS->value.push_back(retrieveElement( AS , i , i ));
+		(*DS).push_back(retrieveElement( AS , i , i ));
 		// change the diagonal elements in LUS to 0
 		changeElement( LUS , i , i , 0.0 );
 	}
@@ -284,7 +284,7 @@ int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* A
 
 }
 
-int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* vec ){
+int compressed::matrixProduct( vector<double>* result , comp_r_mat* A , vector<double>* vec ){
     /* calculates the matrix product of A and vec and stores it in result
      * only works for vector products
      */
@@ -293,33 +293,34 @@ int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* ve
         double pdt = 0.0;
 		for ( int j = 0 ; j < rank ; j++ ){
 			double temp = retrieveElement( A , i , j );
-			pdt += temp*(vec->value[j]);
+			pdt += (temp)*((*vec)[j]);
 		}
-        result->value[i] = pdt;
+        (*result)[i] = pdt;
 	}
 	return 0;
 }
 
-int compressed::jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , comp_diag* B ){
-	int rank = X->value.size();
-	comp_diag matPdt;
-	for ( int i = 0 ; i < rank ; i ++ )	matPdt.value.push_back(0.0);
+int compressed::jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_mat* LUS , vector<double>* B ){
+	int rank = (*X).size();
+	vector<double> matPdt;
+	for ( int i = 0 ; i < rank ; i ++ )	matPdt.push_back(0.0);
 
 	matrixProduct(&matPdt , LUS , X );
 	
 	for ( int i = 0 ; i < rank ; i++ ){
-		double dInv = 1.0/DS->value[i];
-		X->value[i] = (B->value[i] + matPdt.value[i])*dInv;
+		double dInv = 1.0/((*DS)[i]);
+		(*X)[i] = ((*B)[i] + matPdt[i])*dInv;
 	}
 
 	return 0;
 
 }
 
-int compressed::calculateNorm( double& norm , comp_diag* v , comp_diag* Ax ){
+int compressed::calculateNorm( double& norm , vector<double>* v , vector<double>* Ax ){
     double squareSum = 0.0;
-    for ( int i = 0 ; i < v->value.size() ; i++ ){
-        double temp = v->value[i] - Ax->value[i];
+    int rank = (*v).size();
+    for ( int i = 0 ; i < rank ; i++ ){
+        double temp = (*v)[i] - (*Ax)[i];
         squareSum +=temp*temp;
     }
     norm = sqrt( squareSum );
