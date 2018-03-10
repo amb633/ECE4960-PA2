@@ -48,9 +48,6 @@ int main(int argc, char const *argv[])
     mat1.value = values;
     mat1.col_id = cols;
     mat1.row_p = row_ptr;
-    mat1.noofRows = mat1.row_p.size()-1;
-    mat1.noofCols = mat1.row_p.size()-1;
-    mat1.noofVars = mat1.value.size();
     
     vector<vector<double>> mat_b_full(mat1_rank);
     for( int i = 0; i< mat_b_full.size(); i++){
@@ -71,32 +68,29 @@ int main(int argc, char const *argv[])
         reorderMat(&reorder_mat1, &reorder_mat1, &reorder_mat_b, k, k);
     }
     
-    compressed::comp_diag mat_b;
-    mat_b.rank = mat1_rank;
-    for( int i = 0; i< mat_b.rank; i++){
-        mat_b.value.push_back(compressed::retrieveElement(&reorder_mat_b, i, 0));
+    vector<double> mat_b;
+    for( int i = 0; i< mat1_rank; i++){
+        mat_b.push_back(compressed::retrieveElement(&reorder_mat_b, i, 0));
     }
     
-    compressed::comp_diag mat_x;
-    mat_x.rank = mat1_rank;
-    for( int i = 0; i< mat_x.rank; i++){
+    vector<double> mat_x;
+    for( int i = 0; i< mat1_rank; i++){
         if( i == 0 ) {
-            mat_x.value.push_back(-0.25);
+            mat_x.push_back(-0.25);
         } else{
-            mat_x.value.push_back(0.0);
+            mat_x.push_back(0.0);
         }
     }
 
 //    compressed::comp_r_mat mat_b2;
     
     compressed::comp_r_mat LUC;
-    compressed::comp_diag DC;
+    vector<double> DC;
     compressed::decomposeMatrix( &DC , &LUC , &mat1 );
     
-    compressed::comp_diag matProd;
-    matProd.rank = mat_b.rank;
-    for ( int i = 0 ; i < matProd.rank ; i++ ){
-    	matProd.value.push_back(0.0);
+    vector<double> matProd;
+    for ( int i = 0 ; i < mat1_rank ; i++ ){
+    	matProd.push_back(0.0);
     }
     double normPrev = 2;
     double normCurrent = 1;
@@ -109,8 +103,8 @@ int main(int argc, char const *argv[])
         compressed::matrixProduct( &matProd , &mat1 , &mat_x );
         compressed::calculateNorm( normCurrent , &mat_b , &matProd );
         cout << counter << " : " ;
-        for ( int i = 4000 ; i < 4005 ; i++ ){
-            cout << mat_x.value[i] << "   ";
+        for ( int i = 0 ; i < 5 ; i++ ){
+            cout << mat_x[i] << "   ";
         }
         cout << " : " << normCurrent << endl;
         counter++;

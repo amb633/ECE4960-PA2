@@ -2,16 +2,117 @@
 
 void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
     /* takes row a*row i and adds it to row j in matrix A
-     * changes the original matrix; no copy made 
+     * changes the original matrix; no copy made
      */
 
+    vector<int> row_i_val, row_i_col,row_j_val, row_j_col;
+    vector<double>::iterator j_val_start;
+    vector<int>::iterator j_col_start;
+    j_val_start = A->value.begin() + A->row_p[j];
+    j_col_start = A->col_id.begin() + A->row_p[j];
+    
+    for( int p = A->row_p[i]; p< A->row_p[i+1]; p++){
+        A->value[p] = a* A->value[p];
+        row_i_val.push_back(A->value[p]);
+        row_i_col.push_back(A->col_id[p]);
+    }
+    
+    for( int p = A->row_p[j]; p< A->row_p[j+1]; p++){
+        row_j_val.push_back(A->value[p]);
+        row_j_col.push_back(A->col_id[p]);
+    }
+    int size_j = row_j_val.size();
+    int row_adj = 0;
+    
+    for(int i_id = 0; i_id < row_i_col.size(); i_id++){
+        bool col_exists = false;
+        for(int j_id = 0; j_id < row_j_col.size();j_id++){
+            if(row_i_col[i_id] == row_j_col[j_id]){
+                row_j_val[j_id] = row_i_val[i_id] + row_j_val[j_id];
+                //row_i_col.erase(row_i_col.begin()+i_id);
+                col_exists = true;
+            }
+        }
+        if(!col_exists){
+            for(int j_id = 0; j_id < row_j_col.size();j_id++){
+                if(row_i_col[i_id] < row_j_col[j_id]){
+                    if(i_id >= row_j_col.size()){
+                        row_j_val.insert(row_j_val.end(), row_j_val[i_id]);
+                        row_j_col.insert(row_j_col.end(), row_i_col[i_id]);
+                        
+                    } else{
+                        row_j_val.insert(row_j_val.begin()+i_id, row_j_val[i_id]);
+                        row_j_col.insert(row_j_col.begin()+j_id, row_i_col[i_id]);
+                    }
+                    break;
+                }else if( j_id == row_j_col.size() - 1){
+                    row_j_col.insert(row_j_col.end(), row_i_col[i_id]);
+                    row_j_val.insert(row_j_val.end(), row_i_val[i_id]);
+                    row_adj++;
+                    break;
+                }
+            }
+        }
+    }
+    A->value.erase(j_val_start, j_val_start + size_j);
+    A->col_id.erase(j_col_start, j_col_start + size_j);
+    A->value.insert(j_val_start, row_j_val.begin(), row_j_val.end());
+    A->col_id.insert(j_col_start, row_j_col.begin(), row_j_col.end());
+    for(int p = j+1; p < A->row_p.size(); p++){
+        A->row_p[p] = A->row_p[p] + row_adj;
+    }
+    return;
 }
 
 void compressed::rowPermute(comp_r_mat* A, int i, int j){
-    /* swaps rows i and j in matrix A 
-     * changes the original matrix; no copy made 
+    /* swaps rows i and j in matrix A
+     * changes the original matrix; no copy made
      */
-
+    int small_row, large_row;
+    if( i < j ){
+        small_row = i;
+        large_row = j;
+    }else if (j < i){
+        small_row = j;
+        large_row = i;
+    } else {
+        return;
+    }
+    vector<double>::iterator val_start =A->value.begin();
+    vector<int>::iterator col_start =A->col_id.begin();
+    
+    int small_row_count = (A->row_p[small_row + 1] - A->row_p[small_row]);
+    int large_row_count = (A->row_p[large_row + 1] - A->row_p[large_row]);
+    
+    vector<double> row_l_val, row_s_val;
+    vector<int> row_l_col, row_s_col;
+    
+    for( int p = A->row_p[large_row]; p< A->row_p[large_row+1]; p++){
+        row_l_val.push_back(A->value[p]) ;
+        row_l_col.push_back(A->col_id[p]);
+    }
+    
+    A->value.erase(val_start+A->row_p[large_row], val_start+A->row_p[large_row+1]);
+    A->col_id.erase(col_start+A->row_p[large_row], col_start+A->row_p[large_row+1]);
+    
+    for( int p = A->row_p[small_row]; p< A->row_p[small_row+1]; p++){
+        row_s_val.push_back(A->value[p]);
+        row_s_col.push_back(A->col_id[p]);
+    }
+    
+    A->value.erase(val_start+A->row_p[small_row], val_start+A->row_p[small_row+1]);
+    A->col_id.erase(col_start+A->row_p[small_row], col_start+A->row_p[small_row+1]);
+    
+    for(int i = small_row+1; i <= large_row; i++){
+        A->row_p[i] = A->row_p[i] - small_row_count + large_row_count;
+    }
+    
+    A->value.insert(val_start+A->row_p[small_row], row_l_val.begin(), row_l_val.end());
+    A->value.insert(val_start+A->row_p[large_row], row_s_val.begin(), row_s_val.end());
+    A->col_id.insert(col_start+A->row_p[small_row], row_l_col.begin(), row_l_col.end());
+    A->col_id.insert(col_start+A->row_p[large_row], row_s_col.begin(), row_s_col.end());
+    
+    return;
 
 }
 
