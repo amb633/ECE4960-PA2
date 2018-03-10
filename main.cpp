@@ -164,11 +164,19 @@ int main(int argc, char const *argv[])
     double normPrev3 = 2;
     double normCurrent3 = 1;
     int counter3 = 0;
+
+    vector<double> zeros;
+    for ( int i = 0 ; i < mat1_rank ; i++ ){
+    	zeros.push_back(0.0);
+    }
     
     vector<double> mat_x3;
     for( int i = 0; i< mat1_rank; i++){
         mat_x3.push_back((1.0/DC[i]));
     }
+
+    double norm_b;
+    compressed::calculateNorm( norm_b , &mat_b3 , &zeros );
     
     cout << "calculating mat_x for mat_b3" << endl;
     while( abs(normCurrent3 - normPrev3) > 1e-10 ){
@@ -180,7 +188,7 @@ int main(int argc, char const *argv[])
         for ( int i = 0 ; i < 5 ; i++ ){
             cout << mat_x3[i] << "   ";
         }
-        cout << " : " << normCurrent3 << endl;
+        cout << " : " << normCurrent3/norm_b << endl;
         counter3++;
     }
     
