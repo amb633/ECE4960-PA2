@@ -35,6 +35,8 @@ namespace full{
 	int changeElement( vector< vector<double>>* A , int rowInd , int colInd , double newValue );
 	int scalarMultiple( vector< vector<double>>* A , double scale );
 	int copyMatrix( vector< vector<double>>* C , vector< vector<double>>* A );
+	
+	/* non-utility functions*/
 	int decomposeMatrix( vector<double>* D , vector< vector<double>>* LU , vector< vector<double>>* A );
 	int jacobiSolver( vector<double>* X , vector<double>* D , vector< vector<double>>* LU , vector<double>* B );
 	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );

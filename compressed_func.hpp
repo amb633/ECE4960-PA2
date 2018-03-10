@@ -17,14 +17,10 @@ namespace compressed{
 		vector<double> value;
     	vector<int> row_p;
     	vector<int> col_id;
-    	int noofRows;
-    	int noofCols;
-    	int noofVars;
 	} comp_r_mat;
 
 	typedef struct Compressed_Diagonal_Matrix{
-		vector<double> value;
-		int rank;		
+		vector<double> value;	
 	} comp_diag;
 
 	/* returns row_j = row_j + a*row_i */

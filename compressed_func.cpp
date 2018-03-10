@@ -17,7 +17,6 @@ void compressed::rowPermute(comp_r_mat* A, int i, int j){
 
 double compressed::retrieveElement( comp_r_mat* input, int row_id, int col_id){
 	/* returns the value stored at specified row_id and col_id */
-    
 
     double element = 0.0;
 
@@ -238,7 +237,7 @@ int compressed::scalarMultiple( comp_r_mat* A , double scale ){
 	/*  scalar operations (e.g. want to multiply all elements in matrix by 2);
 	 *  so the row and column order are not important, just muliply everything
 	 */
-	for ( int i = 0 ; i < A->noofVars ; i++ ){
+	for ( int i = 0 ; i < A->value.size() ; i++ ){
 		if( A->value[i] != 0 )	A->value[i] = scale*A->value[i];
 	}
 	return 0;
@@ -249,9 +248,9 @@ int compressed::copyMatrix( comp_r_mat* C , comp_r_mat* A ){
 	 * create a pointer to both in the main, and pass the pointers as function handles
 	 * need to do a deep copy if using dynamic memory allocation
 	 */
-	C->noofRows = A->noofRows;
-	C->noofCols = A->noofCols;
-	C->noofVars = A->noofVars;
+	/*C->noofRows = A->row_p.size() - 1;
+	C->noofCols = A->row_p.size() - 1;
+	C->noofVars = A->value.size();*/
 	C->value = A->value;
 	C->row_p = A->row_p;
 	C->col_id = A->col_id;
@@ -269,9 +268,9 @@ int compressed::decomposeMatrix( comp_diag* DS , comp_r_mat* LUS , comp_r_mat* A
 	copyMatrix( LUS , AS );
 
 	// DS is a single vector of doubles containing the diagonal elements
-	DS->rank = AS->noofRows;
+    int rank = AS->row_p.size() - 1;
 
-	for ( int i = 0 ; i < DS->rank ; i++ ){
+	for ( int i = 0 ; i < rank ; i++ ){
 		// extract the diagonal elements to DS
 		DS->value.push_back(retrieveElement( AS , i , i ));
 		// change the diagonal elements in LUS to 0
@@ -289,9 +288,10 @@ int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* ve
     /* calculates the matrix product of A and vec and stores it in result
      * only works for vector products
      */
-    for ( int i = 0 ; i < A->noofRows ; i++ ){
+    int rank = A->row_p.size() - 1;
+    for ( int i = 0 ; i < rank ; i++ ){
         double pdt = 0.0;
-		for ( int j = 0 ; j < A->noofCols ; j++ ){
+		for ( int j = 0 ; j < rank ; j++ ){
 			double temp = retrieveElement( A , i , j );
 			pdt += temp*(vec->value[j]);
 		}
@@ -301,14 +301,13 @@ int compressed::matrixProduct( comp_diag* result , comp_r_mat* A , comp_diag* ve
 }
 
 int compressed::jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , comp_diag* B ){
-	int size = DS->rank;
+	int rank = X->value.size();
 	comp_diag matPdt;
-	matPdt.rank = size;
-	for ( int i = 0 ; i < size ; i ++ )	matPdt.value.push_back(0.0);
+	for ( int i = 0 ; i < rank ; i ++ )	matPdt.value.push_back(0.0);
 
 	matrixProduct(&matPdt , LUS , X );
 	
-	for ( int i = 0 ; i < size ; i++ ){
+	for ( int i = 0 ; i < rank ; i++ ){
 		double dInv = 1.0/DS->value[i];
 		X->value[i] = (B->value[i] + matPdt.value[i])*dInv;
 	}
@@ -319,7 +318,7 @@ int compressed::jacobiSolver( comp_diag* X , comp_diag* DS , comp_r_mat* LUS , c
 
 int compressed::calculateNorm( double& norm , comp_diag* v , comp_diag* Ax ){
     double squareSum = 0.0;
-    for ( int i = 0 ; i < v->rank ; i++ ){
+    for ( int i = 0 ; i < v->value.size() ; i++ ){
         double temp = v->value[i] - Ax->value[i];
         squareSum +=temp*temp;
     }
