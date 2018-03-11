@@ -16,7 +16,7 @@ using namespace compressed;
 
 namespace test_compressed{
     
-    void call_tests();
+    void call_comp_tests();
     
     bool test_rowScale(comp_r_mat* input, int i, int j, double a, vector<double>* true_result);
     
@@ -24,12 +24,7 @@ namespace test_compressed{
     
     bool test_retrieveElement(comp_r_mat* input, int i, int j);
     
-    bool test_construct_compressed_matrix( vector<vector<double>>* input );
-    
-    
     bool test_productAx( comp_r_mat* A, vector<double>* x, vector<double>* expected_result );
-    
-    bool test_columnPermute(comp_r_mat* A, int col1, int col2);
     
     bool test_changeElement( comp_r_mat* A , int rowInd , int colInd , double newValue );
     
@@ -39,11 +34,7 @@ namespace test_compressed{
     
     bool test_decomposeMatrix( vector<double>* DS , comp_r_mat* LUS , comp_r_mat* AS );
     
-    bool test_matrixProduct ( vector<double>* result , comp_r_mat* A , vector<double>* vec);
-    
-    bool test_jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_mat* LUS , vector<double>* B );
-    
-    bool test_calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );
+    bool test_calculateNorm( double& expected_norm, vector<double>* v , vector<double>* Ax );
 }
 
 

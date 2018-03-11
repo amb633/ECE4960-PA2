@@ -6,13 +6,18 @@
 
 #include "compressed_func.hpp"
 
+#include "test_comp_func.hpp"
+
 using namespace std;
 using namespace compressed;
 
 int main(int argc, char const *argv[])
 {
+    test_compressed::call_comp_tests();
+    cout << endl;
+    
     auto start_creation = chrono::system_clock::now();
-
+    
     ifstream rowPtr_file("./Mat1/rowPtr.csv");
     int row_value;
     vector<int> row_ptr;
