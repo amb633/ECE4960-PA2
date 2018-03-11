@@ -1,8 +1,3 @@
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <cstdlib>
-
 #include "full_func.hpp"
 
 using namespace std;

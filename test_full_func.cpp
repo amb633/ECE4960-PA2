@@ -1,9 +1,5 @@
 #include "test_full_func.hpp"
 
-using namespace std;
-using namespace full;
-using namespace test_full;
-
 vector< vector<double> > AF = { { 1 , 2 , 0 , 0 , 3 } , { 4 , 5 , 6 , 0 , 0 } , { 0 , 7 , 8 , 0 , 9 } , { 0 , 0 , 0 , 10 , 0 } , { 11 , 0 , 0 , 0 , 12 } };
 vector<double> VF = { 5 , 4 , 3 , 2 , 1 };
 

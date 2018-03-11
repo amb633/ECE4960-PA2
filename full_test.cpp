@@ -1,12 +1,6 @@
-#include <iostream>
-#include <cstdlib>
-#include <cmath>
-
 #include "full_func.hpp"
 #include "test_full_func.hpp"
 
-using namespace std;
-using namespace full;
 using namespace test_full;
 
 int main(int argc, char const *argv[])
