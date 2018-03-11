@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <vector>
+#include <chrono>
 
 #include "compressed_func.hpp"
 
@@ -10,6 +11,8 @@ using namespace compressed;
 
 int main(int argc, char const *argv[])
 {
+    auto start_creation = chrono::system_clock::now();
+
     ifstream rowPtr_file("./Mat1/rowPtr.csv");
     int row_value;
     vector<int> row_ptr;
@@ -42,7 +45,9 @@ int main(int argc, char const *argv[])
     AC.col_id = cols;
     AC.row_p = row_ptr;
 
-    
+    auto end_creation = chrono::system_clock::now();
+    cout << endl;
+
     //2: decompose matrix to diagonals and LU form
     comp_r_mat LUC;
 
@@ -50,6 +55,8 @@ int main(int argc, char const *argv[])
     decomposeMatrix( &DC , &LUC , &AC );
 
     //3: create first B vector and solution vector
+    auto first_pre_start = chrono::system_clock::now();
+
     vector<double> B , X , matProd , zeros ;
     for ( int i = 0 ; i < rank ; i++ ){
         B.push_back(0.0);
@@ -68,6 +75,7 @@ int main(int argc, char const *argv[])
     calculateNorm( normB , &B , &zeros );
 
     //5: first solver loop
+    auto first_start = chrono::system_clock::now();
     cout << "---------- first solver loop ---------- " << endl;
     while( abs(normCurrent - normPrev) > 1e-10 ){
         normPrev = normCurrent;
@@ -82,8 +90,10 @@ int main(int argc, char const *argv[])
         counter++;
     }
     cout << endl;
+    auto first_end = chrono::system_clock::now();
 
     //6: second solver loop
+    auto second_pre_start = chrono::system_clock::now();
     for ( int i = 0 ; i < rank ; i++ ){
         X[i] = 0.0;
         matProd[i] = 0.0;
@@ -99,6 +109,7 @@ int main(int argc, char const *argv[])
     calculateNorm( normB , &B , &zeros );
 
     cout << "---------- second solver loop ---------- " << endl;
+    auto second_start = chrono::system_clock::now();
     while( abs(normCurrent - normPrev) > 1e-10 ){
         normPrev = normCurrent;
         jacobiSolver( &X , &DC , &LUC , &B );
@@ -112,8 +123,10 @@ int main(int argc, char const *argv[])
         counter++;
     }
     cout <<endl;
+    auto second_end = chrono::system_clock::now();
 
     //6: third solver loop
+    auto third_pre_start = chrono::system_clock::now();
     for ( int i = 0 ; i < rank ; i++ ){
         X[i] = 1.0/DC[i];
         matProd[i] = 0.0;
@@ -127,6 +140,7 @@ int main(int argc, char const *argv[])
     calculateNorm( normB , &B , &zeros );
     
     cout << "---------- third solver loop ---------- " << endl;
+    auto third_start = chrono::system_clock::now();
     while( abs(normCurrent - normPrev) > 1e-10 ){
         normPrev = normCurrent;
         jacobiSolver( &X , &DC , &LUC , &B );
@@ -140,6 +154,23 @@ int main(int argc, char const *argv[])
         counter++;
     }
     cout << endl;
+    auto third_end = chrono::system_clock::now();
+
+    chrono::duration<double> elapsed_creation = end_creation - start_creation;
+    chrono::duration<double> elapsed_first_pre_start = first_start - first_pre_start;
+    chrono::duration<double> elapsed_first_solver = first_end - first_start;
+    chrono::duration<double> elapsed_second_pre_start = second_start - second_pre_start;
+    chrono::duration<double> elapsed_second_solver = second_end - second_start;
+    chrono::duration<double> elapsed_third_pre_start = third_start - third_pre_start;
+    chrono::duration<double> elapsed_third_solver = third_end - third_start;
+
+    cout << "Time taken for reading file and creating large matrix = " << elapsed_creation.count() << endl;
+    cout << "Time taken for initializing variables for first solver = " << elapsed_first_pre_start.count() << endl;
+    cout << "Time taken for first solver loop = " << elapsed_first_solver.count() << endl;
+    cout << "Time taken for initializing variables for second solver= " << elapsed_second_pre_start.count() << endl;
+    cout << "Time take for second solver loop = " << elapsed_second_solver.count() << endl;
+    cout << "Time taken for initializing variables for third solver = " << elapsed_third_pre_start.count() << endl;
+    cout << "Time taken for third solver loop = " << elapsed_third_solver.count() << endl;
 
     return 0;
 }

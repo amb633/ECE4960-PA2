@@ -125,7 +125,7 @@ bool test_full::test_matrix_product(){
 	}
 
 	vector<double> ground_truth = { 16.0 , 58.0 , 61.0 , 20.0 , 67.0 };
-	matrixProduct( &prod , &AF , &VF );
+	productAx( &prod , &AF , &VF );
 
 	int counter = 0;
 	for ( int i = 0 ; i < prod.size() ; i++ ){
@@ -138,17 +138,14 @@ bool test_full::test_matrix_product(){
 bool test_full::test_calculate_norm(){
 	bool test = false;
 	vector<double> prod;
-	vector<double> ground_truth = { 16.0 , 58.0 , 61.0 , 20.0 , 67.0 };
-	vector<double> false_gnd_truth = { 17.0 , 59.0 , 61.0 , 19.0 , 66.0 };
+	vector<double> zeros = { 0.0 , 0.0 , 0.0 , 0.0 , 0.0 };
+	vector<double> ones = { 1.0 , 1.0 , 0.0 , -1.0 , -1.0 };
+	vector<double> twos = { 2.0 , 2.0 , 0.0 , -2.0 , -2.0 };
 
-	for ( int i = 0 ; i < VF.size() ; i++ ){
-		prod.push_back(0.0);
-	}
-	matrixProduct( &prod , &AF , &VF );
-	double norm_true , norm_false;
-	calculateNorm( norm_true , &ground_truth , &prod );
-	calculateNorm( norm_false , &false_gnd_truth , &prod );
-	if( norm_true == 0.0 && norm_false == 2.0 ) test = true;
+	double norm_ones , norm_twos;
+	calculateNorm( norm_ones , &zeros , &ones );
+	calculateNorm( norm_twos , &zeros , &twos );
+	if( norm_ones == 2.0 && norm_twos == 4.0 ) test = true;
 	return test;
 }
 

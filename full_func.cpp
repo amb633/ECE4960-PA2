@@ -73,7 +73,7 @@ int full::rowScale(vector< vector<double>>* AF, int i, int j, double a ){
 }
 
 /* calculates the matrix product of A and vec and stores it in result */
-int full::matrixProduct( vector<double>* result , vector< vector<double>>* AF , vector<double>* VF ){
+int full::productAx( vector<double>* result , vector< vector<double>>* AF , vector<double>* VF ){
 	// assuming AF is a square matrix, and result and VF are vectors of the same rank as AF
 	for ( int i = 0 ; i < (*VF).size() ; i++ ){
 		double p = 0.0;
@@ -118,7 +118,7 @@ int full::jacobiSolver( vector<double>* X , vector<double>* DF , vector< vector<
 
 	vector<double> matPdt;
 	for ( int i = 0 ; i < (*DF).size() ; i++ ) matPdt.push_back(0.0);
-	matrixProduct( &matPdt , LUF , X );
+	productAx( &matPdt , LUF , X );
 
 	for ( int i = 0 ; i < (*DF).size() ; i++ ){
 		double dInv = 1.0/((*DF)[i]);

@@ -36,7 +36,7 @@ namespace full{
 	int rowScale(vector< vector<double>>* AF, int i, int j, double a );
 
 	// calculates the matrix product of AF and VF and stores it in result
-	int matrixProduct( vector<double>* result , vector< vector<double>>* AF , vector<double>* VF );
+	int productAx( vector<double>* result , vector< vector<double>>* AF , vector<double>* VF );
 
 	// calculate norm of v - AX
 	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );	

@@ -83,7 +83,7 @@ bool wilkinson_test::test_matrix_product( compressed::comp_r_mat* AC , vector< v
 		result_full.push_back(0.0);
 	}
 	compressed::productAx( &result_comp , AC , B );
-	full::matrixProduct( &result_full , AF , B );
+	full::productAx( &result_full , AF , B );
 
 	int counter = 0;
 	for ( int i = 0 ; i < rank ; i++ ){
@@ -104,7 +104,7 @@ bool wilkinson_test::test_calculate_norm( compressed::comp_r_mat* AC , vector< v
 		result_full.push_back(0.0);
 	}
 	compressed::productAx( &result_comp , AC , B );
-	full::matrixProduct( &result_full , AF , B );
+	full::productAx( &result_full , AF , B );
 
 	double norm_comp , norm_full;
 	compressed::calculateNorm( norm_comp , &result_comp , &result_full );
@@ -174,7 +174,7 @@ bool wilkinson_test::test_jacobi_solver( compressed::comp_r_mat* AC , vector< ve
    	while ( abs(normCurrent - normPrev) > 1e-7) {
        	normPrev = normCurrent;
        	full::jacobiSolver( &X_F , &DF , &LUF , B );
-       	full::matrixProduct( &mpf , AF , &X_F );
+       	full::productAx( &mpf , AF , &X_F );
        	full::calculateNorm( normCurrent , B , &mpf );
    	} 
 
