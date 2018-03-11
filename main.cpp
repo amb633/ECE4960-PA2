@@ -42,8 +42,10 @@ int main(int argc, char const *argv[])
     AC.col_id = cols;
     AC.row_p = row_ptr;
 
+    
     //2: decompose matrix to diagonals and LU form
     comp_r_mat LUC;
+
     vector<double> DC;
     decomposeMatrix( &DC , &LUC , &AC );
 
