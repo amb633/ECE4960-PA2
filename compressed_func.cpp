@@ -5,14 +5,15 @@ void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
      * changes the original matrix; no copy made
      */
 
+    /* declares new vectors to hold non-zero elements and corresponding col_id for rows i and j */
     vector<int> row_i_val, row_i_col,row_j_val, row_j_col;
     vector<double>::iterator j_val_start;
     vector<int>::iterator j_col_start;
     j_val_start = A->value.begin() + A->row_p[j];
     j_col_start = A->col_id.begin() + A->row_p[j];
     
+    /* multiplies all the i row values by the scalar a */
     for( int p = A->row_p[i]; p< A->row_p[i+1]; p++){
-//        A->value[p] = a* A->value[p];
         row_i_val.push_back(a*A->value[p]);
         row_i_col.push_back(A->col_id[p]);
     }
@@ -21,15 +22,18 @@ void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
         row_j_val.push_back(A->value[p]);
         row_j_col.push_back(A->col_id[p]);
     }
+    
     int size_j = row_j_val.size();
     int row_adj = 0;
     
+    /* checks if the cols in i exist in j */
+    /* if col exists in both, the values are added together */
+    /* if an i col does NOT exists in j, the value and col_id is inserted into the row j */
     for(int i_id = 0; i_id < row_i_col.size(); i_id++){
         bool col_exists = false;
         for(int j_id = 0; j_id < row_j_col.size();j_id++){
             if(row_i_col[i_id] == row_j_col[j_id]){
                 row_j_val[j_id] = row_i_val[i_id] + row_j_val[j_id];
-                //row_i_col.erase(row_i_col.begin()+i_id);
                 col_exists = true;
             }
         }
@@ -54,10 +58,15 @@ void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
             }
         }
     }
+    
+    /* earses the previous row j values and col_id in matrix A */
+    /* inserts in new values and col_id from in row_j_val and row_j_col_id */
     A->value.erase(j_val_start, j_val_start + size_j);
     A->col_id.erase(j_col_start, j_col_start + size_j);
     A->value.insert(j_val_start, row_j_val.begin(), row_j_val.end());
     A->col_id.insert(j_col_start, row_j_col.begin(), row_j_col.end());
+    
+    /* adjusts row_p for A for the new cols and values added to row j */
     for(int p = j+1; p < A->row_p.size(); p++){
         A->row_p[p] = A->row_p[p] + row_adj;
     }
@@ -68,6 +77,8 @@ void compressed::rowPermute(comp_r_mat* A, int i, int j){
     /* swaps rows i and j in matrix A
      * changes the original matrix; no copy made
      */
+    
+    /* determine which row occurs first in matrix (small_row) */
     int small_row, large_row;
     if( i < j ){
         small_row = i;
@@ -78,12 +89,14 @@ void compressed::rowPermute(comp_r_mat* A, int i, int j){
     } else {
         return;
     }
+    
+    /* create iterator pointer to the beginning of each rows in row_p */
     vector<double>::iterator val_start =A->value.begin();
     vector<int>::iterator col_start =A->col_id.begin();
-    
     int small_row_count = (A->row_p[small_row + 1] - A->row_p[small_row]);
     int large_row_count = (A->row_p[large_row + 1] - A->row_p[large_row]);
     
+    /* these vectors will be used to track values and col_id that will be swapped */
     vector<double> row_l_val, row_s_val;
     vector<int> row_l_col, row_s_col;
     
@@ -103,10 +116,12 @@ void compressed::rowPermute(comp_r_mat* A, int i, int j){
     A->value.erase(val_start+A->row_p[small_row], val_start+A->row_p[small_row+1]);
     A->col_id.erase(col_start+A->row_p[small_row], col_start+A->row_p[small_row+1]);
     
+    /* update the row_p to swap the rows, adjust the count in row_p for each row */
     for(int i = small_row+1; i <= large_row; i++){
         A->row_p[i] = A->row_p[i] - small_row_count + large_row_count;
     }
     
+    /* insert in the row values and col_id back into the matrix at the swapped starting iterator pointers */
     A->value.insert(val_start+A->row_p[small_row], row_l_val.begin(), row_l_val.end());
     A->value.insert(val_start+A->row_p[large_row], row_s_val.begin(), row_s_val.end());
     A->col_id.insert(col_start+A->row_p[small_row], row_l_col.begin(), row_l_col.end());
@@ -145,6 +160,8 @@ compressed::comp_r_mat compressed::construct_compressed_matrix( vector<vector<do
 	int non_zeros = 0;
 	mat_A.row_p.push_back(non_zeros);
 
+    /* finds the non-zero values and push into the A.value vector and the col id into the A.col_id */
+    /* counts non-zero values for each row, and pushes the value to row_p for each row (cumulatively) */
 	for ( int i = 0 ; i < rows ; i++ ){
 		for ( int j = 0 ; j < columns ; j++ ){
 			if ((*input)[i][j] !=0){
@@ -178,6 +195,12 @@ compressed::comp_r_mat compressed::construct_compressed_matrix(vector<int>* i, v
 }
 
 double compressed::productAx( vector<double>* b, comp_r_mat* A, vector<double>* x ){
+    /* checks if the dimensions of vector and matrix are the same -- if not return 1*/
+    /* checks if product results in inf/ninf -- if yes return 2*/
+    /* checks if product results in nan -- if yes return 3*/
+    /* checks if product results in sucessful -- if yes return 0*/
+    /* product returns to vector b (pre-determined size --same as x) */
+    /* product calculated as each row in matrix times the corresponding value in vector and summed */
     if(A->row_p.size()-1 == x->size()){
         for(int i = 0; i < A->row_p.size()-1; i++){
             double product = 0.0;
@@ -215,26 +238,6 @@ void compressed::print_comp_r_mat( comp_r_mat* mat_a ){
         cout << mat_a->col_id[n] << ", ";
     }
     cout << endl;
-
-}
-
-bool compressed::check_sum( comp_r_mat* mat, vector<double>* vec ){
-    bool check_sum = false;
-    
-    double mat_sum = 0;
-    for(int p=0; p<mat->value.size(); p++){
-        mat_sum = mat_sum + mat->value[p];
-    }
-    double vec_sum = 0;
-    for(int k=0; k<(*vec).size(); k++){
-        vec_sum = vec_sum + (*vec)[k];
-    }
-    double sum_dif = abs(mat_sum-vec_sum);
-    if(sum_dif <= (pow(10.0,-7))){
-        cout << sum_dif << endl;
-        check_sum=true;
-    }
-    return check_sum;
 
 }
 
@@ -306,14 +309,16 @@ int compressed::decomposeMatrix( vector<double>* DS , comp_r_mat* LUS , comp_r_m
 }
 
 int compressed::jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_mat* LUS , vector<double>* B ){
-	int rank = (*X).size();
+    int rank = (*X).size();
 	vector<double> matPdt;
 	for ( int i = 0 ; i < rank ; i ++ )	matPdt.push_back(0.0);
-
+    // calculate product of lower-upper matrix and X
 	productAx(&matPdt , LUS , X );
 	
+    // reverse calculate convergent solution
 	for ( int i = 0 ; i < rank ; i++ ){
 		double dInv = 1.0/((*DS)[i]);
+        // update X values
 		(*X)[i] = ((*B)[i] + matPdt[i])*dInv;
 	}
 
@@ -322,6 +327,7 @@ int compressed::jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_ma
 }
 
 int compressed::calculateNorm( double& norm , vector<double>* v , vector<double>* Ax ){
+    //calculates || v - Ax ||
     double squareSum = 0.0;
     int rank = (*v).size();
     for ( int i = 0 ; i < rank ; i++ ){
