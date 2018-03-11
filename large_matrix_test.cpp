@@ -157,7 +157,7 @@ int main(int argc, char const *argv[])
 
     cout << endl << boolalpha;
     cout << "testing large matrix row permutation: " << test_row_permute( &AC ) << endl;
-    //cout << "testing large matrix row scaling    : " << test_row_scale ( &AC ) << endl;
+    cout << "testing large matrix row scaling    : " << test_row_scale ( &AC ) << endl;
     cout << "testing large matrix product        : " << test_matrix_product( &AC ) << endl;
     cout << "testing large matrix calculate norm : " << test_calculate_norm( &AC ) << endl;
     cout << "testing large matrix decomposition  : " << test_matrix_decomposition( &AC ) << endl;
