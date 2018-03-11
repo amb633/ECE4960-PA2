@@ -54,7 +54,7 @@ bool large_matrix_test::test_matrix_product( compressed::comp_r_mat* AC ){
 		product.push_back(0.0);
 	}
 	//2: call the matrix product function
-	compressed::matrixProduct( &product , AC , &B );
+	compressed::productAx( &product , AC , &B );
 	//3: check sum
 	double sum_vector = 0.0 ;
 	double sum_matrix = 0.0 ;
@@ -86,8 +86,8 @@ bool large_matrix_test::test_calculate_norm( compressed::comp_r_mat* AC ){
 		B.push_back(1.0);
 	}
 	//4: call matrix product functions
-	compressed::matrixProduct( &product_A , AC , &B );
-	compressed::matrixProduct( &product_C , &CC , &B );
+	compressed::productAx( &product_A , AC , &B );
+	compressed::productAx( &product_C , &CC , &B );
 	//5: reverse-permute the rows in product_C
 	double temp = product_C[500];
 	product_C[500] = product_C[2000];

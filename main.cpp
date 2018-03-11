@@ -1,24 +1,15 @@
-//
-//  main.cpp
-//  
-//
-//  Created by Ariana Bruno on 3/8/18.
-//
-
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
 #include <vector>
 
 #include "compressed_func.hpp"
-#include "full_func.hpp"
-#include "test_comp_func.hpp"
 
 using namespace std;
+using namespace compressed;
 
 int main(int argc, char const *argv[])
 {
-    test_compressed::call_tests();
     ifstream rowPtr_file("./Mat1/rowPtr.csv");
     int row_value;
     vector<int> row_ptr;
@@ -26,7 +17,7 @@ int main(int argc, char const *argv[])
         row_ptr.push_back(row_value-1);
     }
     cout << "This is the number of row_ptrs in Mat 1: " << row_ptr.size() << endl;
-
+    
     ifstream values_file("./Mat1/value.csv");
     double value;
     vector<double> values;
@@ -34,7 +25,7 @@ int main(int argc, char const *argv[])
         values.push_back(value);
     }
     cout << "This is the number of non_zero values in Mat 1: " << values.size() << endl;
-
+    
     ifstream col_file("./Mat1/colInd.csv");
     int col_id;
     vector<int> cols;
@@ -43,156 +34,110 @@ int main(int argc, char const *argv[])
     }
     cout << "This is the number of col_ids for non-zero values in Mat 1: " << cols.size() << endl;
 
-    int mat1_rank = row_ptr.size() - 1;
+    const int rank = row_ptr.size() - 1;
 
-    compressed::comp_r_mat mat1;
-    mat1.value = values;
-    mat1.col_id = cols;
-    mat1.row_p = row_ptr;
+    //1: create row-compressed matrix
+    comp_r_mat AC;
+    AC.value = values;
+    AC.col_id = cols;
+    AC.row_p = row_ptr;
 
-//    vector<vector<double>> mat_b1_full(mat1_rank);
-//    for( int i = 0; i< mat_b1_full.size(); i++){
-//        if( i == 0 ) {
-//            mat_b1_full[i] = {1.0};
-//        } else{
-//            mat_b1_full[i] = {0.0};
-//        }
-//    }
-//
-//    compressed::comp_r_mat mat_b1_comp = compressed::construct_compressed_matrix(&mat_b1_full);
-
-    //    TODO: currently commented out reordering
-//    compressed::comp_r_mat reorder_mat1 = mat1;
-//    compressed::comp_r_mat reorder_mat_b = mat_b_comp;
-//
-////    assumes a sqaure matrix
-//    for( int k = 0; k< mat1.row_p.size()-1; k++ ){
-//        reorderMat(&reorder_mat1, &reorder_mat1, &reorder_mat_b, k, k);
-//    }
-
-    vector<double> mat_b1;
-    for( int i = 0; i< mat1_rank; i++){
-        if(i == 0){
-            mat_b1.push_back(1.0);
-        } else {
-            mat_b1.push_back(0.0);
-        }
-    }
-
-    vector<double> mat_b2;
-    for( int i = 0; i< mat1_rank; i++){
-        if(i == 4){
-            mat_b2.push_back(1.0);
-        } else {
-            mat_b2.push_back(0.0);
-        }
-    }
-
-    vector<double> mat_b3;
-    for( int i = 0; i< mat1_rank; i++){
-        mat_b3.push_back(1.0);
-    }
-
-
-    compressed::comp_r_mat LUC;
+    //2: decompose matrix to diagonals and LU form
+    comp_r_mat LUC;
     vector<double> DC;
-    compressed::decomposeMatrix( &DC , &LUC , &mat1 );
+    decomposeMatrix( &DC , &LUC , &AC );
 
-    vector<double> mat_x1;
-    for( int i = 0; i< mat1_rank; i++){
-        mat_x1.push_back(0.0);
-    }
-    mat_x1[0] = (1.0/DC[0]);
-
-    vector<double> matProd1;
-    for ( int i = 0 ; i < mat1_rank ; i++ ){
-        matProd1.push_back(0.0);
-    }
-
-    double normPrev1 = 2;
-    double normCurrent1 = 1;
-    int counter1 = 0;
-
-    // calculating mat_x for mat_b1
-    cout << "calculating mat_x for mat_b1" << endl;
-    while( abs(normCurrent1 - normPrev1) > 1e-10 ){
-        normPrev1 = normCurrent1;
-        compressed::jacobiSolver( &mat_x1 , &DC , &LUC , &mat_b1 );
-        compressed::productAx( &matProd1 , &mat1 , &mat_x1 );
-        compressed::calculateNorm( normCurrent1 , &mat_b1 , &matProd1 );
-        cout << counter1 << " : " ;
-        for ( int i = 0 ; i < 5 ; i++ ){
-            cout << mat_x1[i] << "   ";
-        }
-        cout << " : " << normCurrent1 << endl;
-        counter1++;
-    }
-
-    vector<double> matProd2;
-    for ( int i = 0 ; i < mat1_rank ; i++ ){
-        matProd2.push_back(0.0);
-    }
-
-    double normPrev2 = 2;
-    double normCurrent2 = 1;
-    int counter2 = 0;
-
-    vector<double> mat_x2;
-    for( int i = 0; i< mat1_rank; i++){
-        mat_x2.push_back(0.0);
-    }
-    mat_x2[4] = (1.0/DC[4]);
-
-    // calculating mat_x for mat_b2
-    cout << "calculating mat_x for mat_b2" << endl;
-    while( abs(normCurrent2 - normPrev2) > 1e-10 ){
-        normPrev2 = normCurrent2;
-        compressed::jacobiSolver( &mat_x2 , &DC , &LUC , &mat_b2 );
-        compressed::productAx( &matProd2 , &mat1 , &mat_x2 );
-        compressed::calculateNorm( normCurrent2 , &mat_b2 , &matProd2 );
-        cout << counter2 << " : " ;
-        for ( int i = 0 ; i < 5 ; i++ ){
-            cout << mat_x2[i] << "   ";
-        }
-        cout << " : " << normCurrent2 << endl;
-        counter2++;
-    }
-
-    vector<double> matProd3;
-    for ( int i = 0 ; i < mat1_rank ; i++ ){
-        matProd3.push_back(0.0);
-    }
-
-    double normPrev3 = 2;
-    double normCurrent3 = 1;
-    int counter3 = 0;
-
-    vector<double> zeros;
-    for ( int i = 0 ; i < mat1_rank ; i++ ){
+    //3: create first B vector and solution vector
+    vector<double> B , X , matProd , zeros ;
+    for ( int i = 0 ; i < rank ; i++ ){
+        B.push_back(0.0);
+        X.push_back(0.0);
+        matProd.push_back(0.0);
         zeros.push_back(0.0);
     }
+    B[0] = 1.0;
+    X[0] = (1.0/DC[0]);
 
-    vector<double> mat_x3;
-    for( int i = 0; i< mat1_rank; i++){
-        mat_x3.push_back((1.0/DC[i]));
+    //4: initialize variables for loop
+    double normPrev = 2;
+    double normCurrent = 1;
+    double normB = 0;
+    int counter = 0;
+    calculateNorm( normB , &B , &zeros );
+
+    //5: first solver loop
+    cout << "---------- first solver loop ---------- " << endl;
+    while( abs(normCurrent - normPrev) > 1e-10 ){
+        normPrev = normCurrent;
+        jacobiSolver( &X , &DC , &LUC , &B );
+        productAx( &matProd , &AC , &X );
+        calculateNorm( normCurrent , &B , &matProd );
+        cout << counter << " : ";
+        /*for ( int i = 0 ; i < 5 ; i++ ){
+            cout << X[i] << "   " ;
+        }*/
+        cout << "  residual norm = " << normCurrent/normB << endl;
+        counter++;
+    }
+    cout << endl;
+
+    //6: second solver loop
+    for ( int i = 0 ; i < rank ; i++ ){
+        X[i] = 0.0;
+        matProd[i] = 0.0;
+    }
+    B[0] = 0.0;
+    B[4] = 1.0;
+    X[4] = (1.0/DC[4]);
+
+    normPrev = 2;
+    normCurrent = 1;
+    normB = 0;
+    counter = 0;
+    calculateNorm( normB , &B , &zeros );
+
+    cout << "---------- second solver loop ---------- " << endl;
+    while( abs(normCurrent - normPrev) > 1e-10 ){
+        normPrev = normCurrent;
+        jacobiSolver( &X , &DC , &LUC , &B );
+        productAx( &matProd , &AC , &X );
+        calculateNorm( normCurrent , &B , &matProd );
+        cout << counter << " : ";
+        /*for ( int i = 0 ; i < 5 ; i++ ){
+            cout << X[i] << "   " ;
+        }*/
+        cout << "  residual norm = " << normCurrent/normB << endl;
+        counter++;
+    }
+    cout <<endl;
+
+    //6: third solver loop
+    for ( int i = 0 ; i < rank ; i++ ){
+        X[i] = 1.0/DC[i];
+        matProd[i] = 0.0;
+        B[i] = 1.0;
     }
 
-    double norm_b;
-    compressed::calculateNorm( norm_b , &mat_b3 , &zeros );
-
-    cout << "calculating mat_x for mat_b3" << endl;
-    while( abs(normCurrent3 - normPrev3) > 1e-10 ){
-        normPrev3 = normCurrent3;
-        compressed::jacobiSolver( &mat_x3 , &DC , &LUC , &mat_b3 );
-        compressed::productAx( &matProd3 , &mat1 , &mat_x3 );
-        compressed::calculateNorm( normCurrent3 , &mat_b3 , &matProd3 );
-        cout << counter3 << " : " ;
-        for ( int i = 0 ; i < 5 ; i++ ){
-            cout << mat_x3[i] << "   ";
-        }
-        cout << " : " << normCurrent3/norm_b << endl;
-        counter3++;
-    }
+    normPrev = 2;
+    normCurrent = 1;
+    normB = 0;
+    counter = 0;
+    calculateNorm( normB , &B , &zeros );
     
-}
+    cout << "---------- third solver loop ---------- " << endl;
+    while( abs(normCurrent - normPrev) > 1e-10 ){
+        normPrev = normCurrent;
+        jacobiSolver( &X , &DC , &LUC , &B );
+        productAx( &matProd , &AC , &X );
+        calculateNorm( normCurrent , &B , &matProd );
+        cout << counter << " : ";
+        /*for ( int i = 0 ; i < 5 ; i++ ){
+            cout << X[i] << "   " ;
+        }*/
+        cout << "  residual norm = " << normCurrent/normB << endl;
+        counter++;
+    }
+    cout << endl;
 
+    return 0;
+}

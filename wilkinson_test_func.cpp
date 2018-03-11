@@ -200,6 +200,7 @@ int main(int argc, char const *argv[])
 	cout << "testing copy matrix functions      : " << test_copy_matrix( &AC , &A ) << endl;
 	cout << "testing scalar multiple functions  : " << test_scalar_multiple( &AC , &A ) << endl;
 	cout << "testing row permutation functions  : " << test_row_permute( &AC , &A ) << endl;
+	cout << "testing row scaling functions      : " << test_row_scale( &AC , &A ) << endl;
 	cout << "testing matrix product functions   : " << test_matrix_product( &AC , &A , &B ) << endl;
 	cout << "testing calculate norm functions   : " << test_calculate_norm( &AC , &A , &B ) << endl;
 	cout << "testing matrix decomposition funcs : " << test_matrix_decomposition( &AC , &A ) << endl;
@@ -216,12 +217,11 @@ int main(int argc, char const *argv[])
 	}
 
 	cout << "testing jacobi solver functions #3 : " << test_jacobi_solver( &AC , &A , &B ) << endl;
-	//cout << "testing row scaling functions      : " << test_row_scale( &AC , &A ) << endl;
 
 	compressed::rowScale( &AC , 0 , 2 , 3.0 );
 	full::rowScale( &A , 0 , 2 , 3.0 );
 
-	for ( int i = 0 ; i < B.size() ; i++ ){
+	/*for ( int i = 0 ; i < B.size() ; i++ ){
 		for ( int j = 0 ; j < B.size() ; j++ ){
 			cout << compressed::retrieveElement( &AC , i , j ) << "   ";
 		}
@@ -233,7 +233,7 @@ int main(int argc, char const *argv[])
 			cout << full::retrieveElement( &A , i , j ) << "   ";
 		}
 		cout << endl;
-	}
+	}*/
 
 
 
