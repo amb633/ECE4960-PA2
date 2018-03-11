@@ -25,7 +25,7 @@ namespace compressed{
 	comp_r_mat construct_compressed_matrix( vector<vector<double>>* input );
 	comp_r_mat construct_compressed_matrix(vector<int>* i, vector<int>* j, vector<double>* val, int rowRank, int colRank);
 
-	// returns element at i,j in matrix A
+	// returns element at i,j in matrix input
 	double retrieveElement( comp_r_mat* input, int row_id, int col_id);
 
 	// create a copy of matrix A and store it in C
@@ -37,7 +37,7 @@ namespace compressed{
 	// multiplies all the values in a matrix by scale
 	int scalarMultiple( comp_r_mat* A , double scale );
 
-	// changes the value of an existing non-zero element */
+	// changes the value of an existing non-zero element
 	int changeElement( comp_r_mat* A , int rowInd , int colInd , double newValue );
 
 	// swaps rows i and j

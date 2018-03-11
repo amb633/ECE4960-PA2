@@ -4,41 +4,51 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <numeric>
-#include <stdio.h>
+#include <cstdlib>
 
 using namespace std;
 
 namespace full{
 
-	/*typedef struct Full_Matrix{
-		vector<double> value;
-    	vector<size_t> row_p;
-    	vector<int> col_id;
-	} full_mat;
+	/* UTILITY FUNCTIONS */
 
-	typedef struct Full_Diagonal_Matrix{
-		vector<double> value;
-		vector<size_t> rank;		
-	} full_diag;*/
+	// returns element at i,j in matrix AF / element i in vector VF 
+	double retrieveElement( vector<vector<double>>* AF, int rowInd, int colInd);
+	double retrieveElement( vector<double>* VF , int rowInd );
 
-	double retrieveElement( vector<vector<double>>* input, int row_id, int col_id);
-	double productAx( vector< vector<double>>* input, vector<double>* x, vector<double>* b);
-	void rowScale(vector< vector<double>>* input, int i, int j, double a );
-	void rowPermute(vector< vector<double>>* input, int i, int j);
+	// print the matrix AF / vector VF
+	void print_full_mat( vector< vector<double>>* AF );
+	void print_full_vec( vector<double>* VF );
 
-	void print_full_mat( vector< vector<double>>* input );
-	//bool check_sum( vector< vector<double>>* mat, vector<double>* vec );
-	void reorderMat( vector< vector<double>>* input, vector< vector<double>>* reorder_A, vector< vector<double>>* reorder_B, int R, int C);
-	void columnPermute(vector< vector<double>>* A, int col1, int col2);
+	// set element at i,j in AF to newValue
+	int changeElement( vector< vector<double>>* AF , int rowInd , int colInd , double newValue );
 
-	int changeElement( vector< vector<double>>* A , int rowInd , int colInd , double newValue );
-	int scalarMultiple( vector< vector<double>>* A , double scale );
-	int copyMatrix( vector< vector<double>>* C , vector< vector<double>>* A );
+	// create a copy of matrix AF and store it in CF
+	int copyMatrix( vector< vector<double>>* CF , vector< vector<double>>* AF );
+
+	// multiply all (non-zero) elements in AF with scale
+	int scalarMultiple( vector< vector<double>>* AF , double scale );
+
+	// swaps row i,j in matrix AF
+	int rowPermute( vector< vector <double>>* AF , int i , int j );
+
+	// returns row_j = row_j + a * row_i
+	int rowScale(vector< vector<double>>* AF, int i, int j, double a );
+
+	// calculates the matrix product of AF and VF and stores it in result
+	int matrixProduct( vector<double>* result , vector< vector<double>>* AF , vector<double>* VF );
+
+	// calculate norm of v - AX
+	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );	
 	
-	/* non-utility functions*/
-	int decomposeMatrix( vector<double>* D , vector< vector<double>>* LU , vector< vector<double>>* A );
-	int jacobiSolver( vector<double>* X , vector<double>* D , vector< vector<double>>* LU , vector<double>* B );
-	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );
+	
+
+	/* SOLVER FUNCTIONS */
+	
+	// decompose AF matrix into diagonal elements (stored in DF) and non-diagonal elements (stored in LUF)
+	int decomposeMatrix( vector<double>* DF , vector< vector<double>>* LUF , vector< vector<double>>* AF );
+	
+	// jacobi solver function
+	int jacobiSolver( vector<double>* X , vector<double>* DF , vector< vector<double>>* LUF , vector<double>* BF );
 
 }
