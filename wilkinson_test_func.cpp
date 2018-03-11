@@ -8,14 +8,10 @@ bool wilkinson_test::test_retrieve_element( compressed::comp_r_mat* AC , vector<
 	int counter = 0;
 	for ( int i = 0 ; i < rank ; i++ ){
 		for ( int j = 0 ; j < rank ; j++ ){
-			//cout << compressed::retrieveElement( AC , i , j ) << "   ";
-			//cout << full::retrieveElement( AF , i , j ) << "   ";
 			if ( full::retrieveElement( AF,i,j ) == compressed::retrieveElement( AC,i,j ) )
 				counter++;
 		}
-		//cout<<endl;
 	}
-	//cout << endl;
 	if ( counter == rank*rank ) test = true;
 	return test;
 }
@@ -207,8 +203,40 @@ int main(int argc, char const *argv[])
 	cout << "testing matrix product functions   : " << test_matrix_product( &AC , &A , &B ) << endl;
 	cout << "testing calculate norm functions   : " << test_calculate_norm( &AC , &A , &B ) << endl;
 	cout << "testing matrix decomposition funcs : " << test_matrix_decomposition( &AC , &A ) << endl;
-	cout << "testing jacobi solver functions    : " << test_jacobi_solver( &AC , & A , &B ) << endl;
-	cout << "testing row scaling functions      : " << test_row_scale( &AC , &A ) << endl;
+	
+	cout << "testing jacobi solver functions #1 : " << test_jacobi_solver( &AC , &A , &B ) << endl;
+
+	B[0] = 0.0;
+	B[3] = 1.0;
+
+	cout << "testing jacobi solver functions #2 : " << test_jacobi_solver( &AC , &A , &B ) << endl;
+
+	for ( int i = 0 ; i < B.size() ; i++ ){
+		B[i] = 1.0;
+	}
+
+	cout << "testing jacobi solver functions #3 : " << test_jacobi_solver( &AC , &A , &B ) << endl;
+	//cout << "testing row scaling functions      : " << test_row_scale( &AC , &A ) << endl;
+
+	compressed::rowScale( &AC , 0 , 2 , 3.0 );
+	full::rowScale( &A , 0 , 2 , 3.0 );
+
+	for ( int i = 0 ; i < B.size() ; i++ ){
+		for ( int j = 0 ; j < B.size() ; j++ ){
+			cout << compressed::retrieveElement( &AC , i , j ) << "   ";
+		}
+		cout << endl;
+	}
+	cout << endl << endl;
+	for ( int i = 0 ; i < B.size() ; i++ ){
+		for ( int j = 0 ; j < B.size() ; j++ ){
+			cout << full::retrieveElement( &A , i , j ) << "   ";
+		}
+		cout << endl;
+	}
+
+
+
 	cout << endl;
 	return 0;
 }
