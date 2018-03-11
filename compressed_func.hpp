@@ -1,5 +1,5 @@
-//#ifndef compressed_mat_func_hpp
-//#define compressed_mat_func_hpp
+#ifndef compressed_func_hpp
+#define compressed_func_hpp
 
 
 #include <iostream>
@@ -31,7 +31,20 @@ namespace compressed{
 	// create a copy of matrix A and store it in C
 	int copyMatrix( comp_r_mat* C , comp_r_mat* A );
 
-	// prints the compressed matrix information
+    /* contructs compressed matrix from a double vector structure */
+	comp_r_mat construct_compressed_matrix( vector<vector<double>>* input );
+    
+    /* contructs compressed matrix from a row and column index vector and value vector (memplux.mtx format) */
+	comp_r_mat construct_compressed_matrix(vector<int>* i, vector<int>* j, vector<double>* val, int rowRank, int colRank);
+	
+    /* calculates the prodct of Matrix A with vector x and the results is in vector b */
+    /* returns 0 if product is successful */
+    /* returns 1 if Matrix A and vector x dimensions are not compatible */
+    /* returns 2 if product results in any inf or ninf values */
+    /* returns 3 if product results in any nan values */
+    double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b );
+	
+	/* prints the compressed matrix information */
 	void print_comp_r_mat( comp_r_mat* mat_a );
 
 	// multiplies all the values in a matrix by scale
@@ -45,9 +58,6 @@ namespace compressed{
 
 	// returns row_j = row_j + a*row_i
 	void rowScale( comp_r_mat* A , int i , int j , double a );
-	
-	// calculates dot product ( do we need this function? )
-	double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b );
 
 	// calculates the matrix product of A and vec and stores it in result
 	int matrixProduct ( vector<double>* result , comp_r_mat* A , vector<double>* vec);
@@ -66,3 +76,6 @@ namespace compressed{
 	int jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_mat* LUS , vector<double>* B );
 
 }
+
+
+#endif /* compressed_func_hpp */

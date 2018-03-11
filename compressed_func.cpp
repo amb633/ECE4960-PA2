@@ -34,21 +34,21 @@ void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
             }
         }
         if(!col_exists){
+            row_adj++;
             for(int j_id = 0; j_id < row_j_col.size();j_id++){
                 if(row_i_col[i_id] < row_j_col[j_id]){
                     if(i_id >= row_j_col.size()){
-                        row_j_val.insert(row_j_val.end(), row_j_val[i_id]);
+                        row_j_val.insert(row_j_val.end(), row_i_val[i_id]);
                         row_j_col.insert(row_j_col.end(), row_i_col[i_id]);
                         
                     } else{
-                        row_j_val.insert(row_j_val.begin()+i_id, row_j_val[i_id]);
+                        row_j_val.insert(row_j_val.begin()+j_id, row_i_val[i_id]);
                         row_j_col.insert(row_j_col.begin()+j_id, row_i_col[i_id]);
                     }
                     break;
                 }else if( j_id == row_j_col.size() - 1){
                     row_j_col.insert(row_j_col.end(), row_i_col[i_id]);
                     row_j_val.insert(row_j_val.end(), row_i_val[i_id]);
-                    row_adj++;
                     break;
                 }
             }
