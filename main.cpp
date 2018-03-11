@@ -5,16 +5,29 @@
 #include <chrono>
 
 #include "compressed_func.hpp"
-
+#include "full_func.hpp"
 #include "test_comp_func.hpp"
+#include "test_full_func.hpp"
+#include "wilkinson_test_func.hpp"
+#include "large_matrix_test.hpp"
 
 using namespace std;
-using namespace compressed;
 
 int main(int argc, char const *argv[])
 {
-    test_compressed::call_comp_tests();
     cout << endl;
+    cout << "-------------------- testing full matrix functions -------------------- " << endl;   
+    test_full::run_full_matrix_tests();
+    cout << endl << endl;
+    cout << "-------------------- testing compressed matrix functions -------------------- " << endl;
+    test_compressed::call_comp_tests();
+    cout << endl << endl;
+    cout << "-------------------- wilkinson tests across full and compressed matrices -------------------- " << endl;
+    wilkinson_test::run_wilkinson_tests();
+    cout << endl << endl;
+    cout << "-------------------- large matrix tests -------------------- " << endl;
+    large_matrix_test::run_large_matrix_tests();
+    cout << endl << endl;
     
     auto start_creation = chrono::system_clock::now();
     
@@ -45,7 +58,7 @@ int main(int argc, char const *argv[])
     const int rank = row_ptr.size() - 1;
 
     //1: create row-compressed matrix
-    comp_r_mat AC;
+    compressed::comp_r_mat AC;
     AC.value = values;
     AC.col_id = cols;
     AC.row_p = row_ptr;
@@ -54,10 +67,10 @@ int main(int argc, char const *argv[])
     cout << endl;
 
     //2: decompose matrix to diagonals and LU form
-    comp_r_mat LUC;
+    compressed::comp_r_mat LUC;
 
     vector<double> DC;
-    decomposeMatrix( &DC , &LUC , &AC );
+    compressed::decomposeMatrix( &DC , &LUC , &AC );
 
     //3: create first B vector and solution vector
     auto first_pre_start = chrono::system_clock::now();
@@ -77,16 +90,16 @@ int main(int argc, char const *argv[])
     double normCurrent = 1;
     double normB = 0;
     int counter = 0;
-    calculateNorm( normB , &B , &zeros );
+    compressed::calculateNorm( normB , &B , &zeros );
 
     //5: first solver loop
     auto first_start = chrono::system_clock::now();
-    cout << "---------- first solver loop ---------- " << endl;
-    while( abs(normCurrent - normPrev) > 1e-10 ){
+    cout << "-------------------- first solver loop -------------------- " << endl;
+    while( abs(normCurrent - normPrev) > 1e-7 ){
         normPrev = normCurrent;
-        jacobiSolver( &X , &DC , &LUC , &B );
-        productAx( &matProd , &AC , &X );
-        calculateNorm( normCurrent , &B , &matProd );
+        compressed::jacobiSolver( &X , &DC , &LUC , &B );
+        compressed::productAx( &matProd , &AC , &X );
+        compressed::calculateNorm( normCurrent , &B , &matProd );
         cout << counter << " : ";
         /*for ( int i = 0 ; i < 5 ; i++ ){
             cout << X[i] << "   " ;
@@ -111,15 +124,15 @@ int main(int argc, char const *argv[])
     normCurrent = 1;
     normB = 0;
     counter = 0;
-    calculateNorm( normB , &B , &zeros );
+    compressed::calculateNorm( normB , &B , &zeros );
 
-    cout << "---------- second solver loop ---------- " << endl;
+    cout << "-------------------- second solver loop -------------------- " << endl;
     auto second_start = chrono::system_clock::now();
-    while( abs(normCurrent - normPrev) > 1e-10 ){
+    while( abs(normCurrent - normPrev) > 1e-7 ){
         normPrev = normCurrent;
-        jacobiSolver( &X , &DC , &LUC , &B );
-        productAx( &matProd , &AC , &X );
-        calculateNorm( normCurrent , &B , &matProd );
+        compressed::jacobiSolver( &X , &DC , &LUC , &B );
+        compressed::productAx( &matProd , &AC , &X );
+        compressed::calculateNorm( normCurrent , &B , &matProd );
         cout << counter << " : ";
         /*for ( int i = 0 ; i < 5 ; i++ ){
             cout << X[i] << "   " ;
@@ -142,15 +155,15 @@ int main(int argc, char const *argv[])
     normCurrent = 1;
     normB = 0;
     counter = 0;
-    calculateNorm( normB , &B , &zeros );
+    compressed::calculateNorm( normB , &B , &zeros );
     
-    cout << "---------- third solver loop ---------- " << endl;
+    cout << "-------------------- third solver loop -------------------- " << endl;
     auto third_start = chrono::system_clock::now();
-    while( abs(normCurrent - normPrev) > 1e-10 ){
+    while( abs(normCurrent - normPrev) > 1e-7 ){
         normPrev = normCurrent;
-        jacobiSolver( &X , &DC , &LUC , &B );
-        productAx( &matProd , &AC , &X );
-        calculateNorm( normCurrent , &B , &matProd );
+        compressed::jacobiSolver( &X , &DC , &LUC , &B );
+        compressed::productAx( &matProd , &AC , &X );
+        compressed::calculateNorm( normCurrent , &B , &matProd );
         cout << counter << " : ";
         /*for ( int i = 0 ; i < 5 ; i++ ){
             cout << X[i] << "   " ;

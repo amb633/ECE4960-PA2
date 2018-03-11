@@ -17,4 +17,6 @@ namespace test_full{
 	bool test_calculate_norm();
 	bool test_matrix_decomposition();
 
+	int run_full_matrix_tests();
+
 }

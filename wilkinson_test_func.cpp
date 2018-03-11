@@ -186,9 +186,8 @@ bool wilkinson_test::test_jacobi_solver( compressed::comp_r_mat* AC , vector< ve
    	return test;
 }
 
-int main(int argc, char const *argv[])
-{
-	cout << endl << boolalpha;
+int wilkinson_test::run_wilkinson_tests() {
+	cout << boolalpha;
 
 	vector< vector<double>> A = {{-4.0 , 1.0 , 0.0 , 0.0 , 1.0 }, {4.0 , -4.0 , 1.0 , 0.0 , 0.0 }, {0.0 , 1.0 , -4.0 , 1.0 , 0.0 }, {0, 0, 1, -4 , 1}, {1 , 0, 0, 1 , -4}};
 	vector<double> B = {1.0 , 0.0 , 0.0 , 0.0 , 0.0 };
@@ -220,22 +219,6 @@ int main(int argc, char const *argv[])
 
 	compressed::rowScale( &AC , 0 , 2 , 3.0 );
 	full::rowScale( &A , 0 , 2 , 3.0 );
-
-	/*for ( int i = 0 ; i < B.size() ; i++ ){
-		for ( int j = 0 ; j < B.size() ; j++ ){
-			cout << compressed::retrieveElement( &AC , i , j ) << "   ";
-		}
-		cout << endl;
-	}
-	cout << endl << endl;
-	for ( int i = 0 ; i < B.size() ; i++ ){
-		for ( int j = 0 ; j < B.size() ; j++ ){
-			cout << full::retrieveElement( &A , i , j ) << "   ";
-		}
-		cout << endl;
-	}*/
-
-
 
 	cout << endl;
 	return 0;

@@ -121,9 +121,7 @@ bool large_matrix_test::test_matrix_decomposition( compressed::comp_r_mat* AC ){
 	return test;
 }
 
-int main(int argc, char const *argv[])
-{
-	cout << endl;
+int large_matrix_test::run_large_matrix_tests() {
 	ifstream rowPtr_file("./Mat1/rowPtr.csv");
     int row_value;
     vector<int> row_ptr;

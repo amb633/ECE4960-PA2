@@ -13,4 +13,6 @@ namespace large_matrix_test{
 	bool test_matrix_product( compressed::comp_r_mat* AC );
 	bool test_calculate_norm( compressed::comp_r_mat* AC );
 	bool test_matrix_decomposition(compressed::comp_r_mat* AC );
+
+	int run_large_matrix_tests();
 }

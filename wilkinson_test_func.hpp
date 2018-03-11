@@ -15,4 +15,6 @@ namespace wilkinson_test{
 	bool test_matrix_decomposition( compressed::comp_r_mat* AC , vector< vector<double>>* AF );
 
 	bool test_jacobi_solver( compressed::comp_r_mat* AC , vector< vector<double>>* AF , vector<double>* B);
+
+	int run_wilkinson_tests();
 }
