@@ -42,7 +42,7 @@ namespace compressed{
     /* returns 1 if Matrix A and vector x dimensions are not compatible */
     /* returns 2 if product results in any inf or ninf values */
     /* returns 3 if product results in any nan values */
-    double productAx( comp_r_mat* A, vector<double>* x, vector<double>* b );
+    double productAx( vector<double>* b , comp_r_mat* A, vector<double>* x );
 	
 	/* prints the compressed matrix information */
 	void print_comp_r_mat( comp_r_mat* mat_a );

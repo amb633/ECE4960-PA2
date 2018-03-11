@@ -12,7 +12,7 @@
 vector<vector<double>> test_vector = {{-4, 1, 0, 0, 1}, {4, -4, 1, 0, 0}, { 0, 1, -4, 1, 0}, {0, 0, 1, -4, 1}, {1, 0, 0, 1, -4}};
 comp_r_mat test_comp = construct_compressed_matrix(&test_vector);
 
-using namespace compressed;
+//using namespace compressed;
 
 void test_compressed::call_tests(){
     cout<<boolalpha;
@@ -58,31 +58,52 @@ void test_compressed::call_tests(){
     cout << endl;
     vector<double> x_0 = {0, 0, 0, 0, 0};
     vector<double> expected_b_0 = {0, 0, 0, 0, 0};
-    cout << "Multiplying matrix by vector of zeros results in a vector of zeros: " << test_productAx(&test_comp, &x_0, &expected_b_0) << endl;
+    cout << "Multiplying matrix by vector: { ";
+    for(int i = 0; i<x_0.size(); i++){
+        cout << x_0[i] << " ";
+    }
+    cout << "} results in a vector: { ";
+    for(int i = 0; i<x_0.size(); i++){
+        cout << expected_b_0[i] << " ";
+    }
+    cout << "} = " << test_productAx(&test_comp, &x_0, &expected_b_0) << endl;
+    
+    
     vector<double> x_1 = {1, 0, 0, 0, 0};
     vector<double> expected_b_1 = {-4, 4, 0, 0, 1};
-    cout << "Multiplying matrix by vector of zeros results in a vector of zeros: " << test_productAx(&test_comp, &x_1, &expected_b_1) << endl;
+    cout << "Multiplying matrix by vector: { ";
+    for(int i = 0; i<x_1.size(); i++){
+        cout << x_1[i] << " ";
+    }
+    cout << "} results in a vector: { ";
+    for(int i = 0; i<expected_b_1.size(); i++){
+        cout << expected_b_1[i] << " ";
+    }
+    cout << "} = " << test_productAx(&test_comp, &x_1, &expected_b_1) << endl;
     
     vector<double> x_2 = {1, 0, 0, 0, 1};
     vector<double> expected_b_2 = {-3, 4, 0, 1, -3};
-    cout << "Multiplying matrix by vector of zeros results in a vector of zeros: " << test_productAx(&test_comp, &x_2, &expected_b_2) << endl;
-        
+    cout << "Multiplying matrix by vector: { ";
+    for(int i = 0; i<x_2.size(); i++){
+        cout << x_2[i] << " ";
+    }
+    cout << "} results in a vector: { ";
+    for(int i = 0; i<expected_b_2.size(); i++){
+        cout << expected_b_2[i] << " ";
+    }
+    cout << "} = " << test_productAx(&test_comp, &x_0, &expected_b_0) << endl;
 }
     
 
 bool test_compressed::test_rowScale(comp_r_mat* input, int i, int j, double a, vector<double>* true_result){
-    
     rowScale(input, i, j, a);
-    
     bool correct = true;
     for( int k = 0; k<true_result->size(); k++){
         double comp_value = retrieveElement(input, j, k);
-//        cout << comp_value << " ";
         if(comp_value != (*true_result)[k]){
             correct = false;
         }
     }
-//    cout << endl;
     return correct;
 }
     
@@ -122,8 +143,8 @@ bool test_compressed::test_construct_compressed_matrix( vector<vector<double>>* 
 
 
 bool test_compressed::test_productAx( comp_r_mat* A, vector<double>* x, vector<double>* expected_result ){
-    vector<double> b;
-    productAx(A, x, &b);
+    vector<double> b(expected_result->size());
+    productAx(&b, A, x);
     bool check = true;
     for( int i = 0; i<b.size(); i++){
         if(b[i] != (*expected_result)[i]){
@@ -133,9 +154,6 @@ bool test_compressed::test_productAx( comp_r_mat* A, vector<double>* x, vector<d
     return check;
 }
 
-bool test_compressed::test_columnPermute(comp_r_mat* A, int col1, int col2){
-    return true;
-}
 
 bool test_compressed::test_changeElement( comp_r_mat* A , int rowInd , int colInd , double newValue ){
     return true;

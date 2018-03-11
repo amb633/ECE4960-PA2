@@ -12,8 +12,8 @@ void compressed::rowScale( comp_r_mat* A , int i , int j , double a ){
     j_col_start = A->col_id.begin() + A->row_p[j];
     
     for( int p = A->row_p[i]; p< A->row_p[i+1]; p++){
-        A->value[p] = a* A->value[p];
-        row_i_val.push_back(A->value[p]);
+//        A->value[p] = a* A->value[p];
+        row_i_val.push_back(a*A->value[p]);
         row_i_col.push_back(A->col_id[p]);
     }
     
@@ -177,10 +177,10 @@ compressed::comp_r_mat compressed::construct_compressed_matrix(vector<int>* i, v
     return mat_A;
 }
 
-double compressed::productAx( comp_r_mat* A, vector<double>* x, vector<double>* b ){
+double compressed::productAx( vector<double>* b, comp_r_mat* A, vector<double>* x ){
     if(A->row_p.size()-1 == x->size()){
         for(int i = 0; i < A->row_p.size()-1; i++){
-            double product = 0;
+            double product = 0.0;
             for(int j = 0; j < A->row_p.size()-1; j++){
                 double value = (retrieveElement(A, i, j));
                 value =  value * (*x)[j];
@@ -191,7 +191,7 @@ double compressed::productAx( comp_r_mat* A, vector<double>* x, vector<double>* 
                 }
                 product = product + value;
             }
-            b->push_back(product);
+            (*b)[i]=(product);
         }
         return 0;
     }
@@ -406,7 +406,7 @@ int compressed::jacobiSolver( vector<double>* X , vector<double>* DS , comp_r_ma
 	vector<double> matPdt;
 	for ( int i = 0 ; i < rank ; i ++ )	matPdt.push_back(0.0);
 
-	matrixProduct(&matPdt , LUS , X );
+	productAx(&matPdt , LUS , X );
 	
 	for ( int i = 0 ; i < rank ; i++ ){
 		double dInv = 1.0/((*DS)[i]);
