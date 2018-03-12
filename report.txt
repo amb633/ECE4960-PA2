@@ -1,13 +1,10 @@
-This programming assignment focuses on space and compressed matrix implementations, relevant functions, test cases, and a final Jacobi
+This programming assignment focuses on full and compressed matrix implementations, relevant functions, test cases, and a final Jacobi
 solver.
 
 Matrix Implementations: The full and compressed matrix structures and their functions were implemented individually using separate 
-namespaces; in future projects, they can be used independently by calling their appropriate header files. 
+namespaces; in future projects, they can be used independently by calling their appropriate header files. Additionally, to help with memory usage and time for computation, all functions took pointers to the original data structures, rather than passing the full structure to the function and having to return the full structure once complete. We felt this led to better efficiency for our functions, especially in cases where we would be dealing with larger datasets. 
 
-Matrix Tests: Both implementations were tested thoroughly for robustness and accuracy. Testing was carried out in a modular manner, 
-where lower order utility functions, such as retrieveElement and scalarMultiple, were tested first, followed by higher order functions 
-like rowPermute and rowScale. Once all the supplementary functions were proven to be accurate, the Jacobi solver implementation was 
-tested. The testing order was as follows:
+Matrix Tests: Both implementations were tested thoroughly for robustness and accuracy. Testing was carried out in a modular manner, where lower order utility functions, such as retrieveElement and scalarMultiple, were tested first, followed by higher order functions like rowPermute and rowScale, which used lower order functions. Once all the supplementary functions were proven to be accurate, the Jacobi solver implementation was tested. The testing order was as follows:
 - first, the full and compressed matrix structures and functions were tested independently. All functions, including basic utility 
 functions were tested against a known ground truth
 - second, both implementations were tested agains each other (with unknown ground truth). Correlation of answers for both sets of 
@@ -16,25 +13,25 @@ functions validates their implementation based on the Wilkinson principle.
 matrix provided.
 
 Jacobi Solver:  The solver was designed to run iteratively until it met a convergence criteria of 1e-7. It was tested on smaller 
-matrices (size 5x5) for both implementations, and was validated to provide identical solutions. Susequently, it was run on the large 
+matrices (size 5x5) for both implementations, and was validated to provide identical solutions. Subsequently, it was run on the large 
 data set provided, and proved to converge based on the same criteria.
 
 Computational Time: Timestamps were generated in-code to obtain the elapsed time (in seconds) for various functions, given below:
 
 Reading data file and creating compressed matrix: 
 Windows: 1.36
-MacOS:
+MacOS: 0.156252
 
 First Solver Loop (with 1.0 in first position of B vector):
 Windows: 35.35
-MacOS:
+MacOS: 25.2507
 
 Second Solver Loop (with 1.0 in fifth position of B vector):
 Windows: 35.71
-MacOS:
+MacOS: 25.9982
 
 Third Solver Loop (with 1.0 is all positions of B vector):
 Windows: 61.47
-MacOS:
+MacOS: 44.0401
 
-Memory Usage: 
+Memory Usage: 332K prior to reading in the input data and then consistently 13M for the remaining (seen in memory.txt file)

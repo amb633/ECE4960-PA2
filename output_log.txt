@@ -1,0 +1,121 @@
+
+-------------------- testing full matrix functions -------------------- 
+test for matrix retrieve element : true
+test for vector retrieve element : true
+test for change element function : true
+test for copy matrix function    : true
+test for scalar multiple function: true
+test for row permute function    : true
+test for row scale function      : true
+test for matrix product function : true
+test for norm caluclation        : true
+test for matrix decomposition    : true
+
+
+
+-------------------- testing compressed matrix functions -------------------- 
+Retrieved correct element 0,1 from compressed matrix : true
+Retrieved correct element 2,4 from compressed matrix : true
+Retrieved correct element 4,3 from compressed matrix : true
+Retrieved correct element 1,2 from compressed matrix : true
+Retrieved correct element 3,1 from compressed matrix : true
+
+Testing compressed matrix rowScale: row 0 multiplied by 3 and added to row 1 returns correct result: true
+Testing compressed matrix rowScale: row 2 multiplied by 1 and added to row 4 returns correct result: true
+Testing compressed matrix rowScale: row 4 multiplied by 3 and added to row 3 returns correct result: true
+Testing compressed matrix rowScale: row 1 multiplied by 1 and added to row 2 returns correct result: true
+Testing compressed matrix rowScale: row 3 multiplied by 3 and added to row 1 returns correct result: true
+
+Row permute accurately switched rows 0 and 1: true
+Row permute accurately switched rows 2 and 4: true
+Row permute accurately switched rows 4 and 3: true
+Row permute accurately switched rows 1 and 2: true
+Row permute accurately switched rows 3 and 1: true
+
+Multiplying matrix by vector: { 0 0 0 0 0 } results in a vector: { 0 0 0 0 0 } = true
+Multiplying matrix by vector: { 1 0 0 0 0 } results in a vector: { -4 4 0 0 1 } = true
+Multiplying matrix by vector: { 1 0 0 0 1 } results in a vector: { -3 4 0 1 -3 } = true
+
+Change element accurately switched updates element at (0,1): true
+Change element accurately switched updates element at (2,4): cannot change zero valued elements -- true
+Change element accurately switched updates element at (4,3): true
+Change element accurately switched updates element at (1,2): true
+Change element accurately switched updates element at (3,1): cannot change zero valued elements -- true
+
+Accurately scale matrix by 0: true
+Accurately scale matrix by 7: true
+Accurately scale matrix by 4: true
+Accurately scale matrix by 1: true
+Accurately scale matrix by 8: true
+
+Accurately copy matrix: true
+
+Accurately decompose matrix: true
+Test incorrect decompose DS matrix: -- diagonal result are incorrect false
+Test incorrect decompose LUS matrix: -- lower/upper results are incorrect false
+
+Accurately calculates the residual norm between two vectors: true
+Accurately calculates the residual norm between two vectors: true
+
+
+-------------------- wilkinson tests across full and compressed matrices -------------------- 
+testing retrieve element functions : true
+testing change element functions   : true
+testing copy matrix functions      : true
+testing scalar multiple functions  : true
+testing row permutation functions  : true
+testing row scaling functions      : true
+testing matrix product functions   : true
+testing calculate norm functions   : true
+testing matrix decomposition funcs : true
+testing jacobi solver functions #1 : true
+testing jacobi solver functions #2 : true
+testing jacobi solver functions #3 : true
+
+
+
+-------------------- large matrix tests -------------------- 
+This is the number of row_ptrs in Mat 1: 5001
+This is the number of non_zero values in Mat 1: 253677
+This is the number of col_ids for non-zero values in Mat 1: 253677
+
+testing large matrix row permutation: true
+testing large matrix row scaling    : false
+testing large matrix product        : true
+testing large matrix calculate norm : true
+testing large matrix decomposition  : true
+
+
+
+This is the number of row_ptrs in Mat 1: 5001
+This is the number of non_zero values in Mat 1: 253677
+This is the number of col_ids for non-zero values in Mat 1: 253677
+
+-------------------- first solver loop -------------------- 
+0 :   residual norm = 4.67109e-05
+1 :   residual norm = 8.92558e-07
+2 :   residual norm = 3.52298e-08
+3 :   residual norm = 1.45844e-09
+
+-------------------- second solver loop -------------------- 
+0 :   residual norm = 5.10218e-05
+1 :   residual norm = 1.01347e-06
+2 :   residual norm = 4.02337e-08
+3 :   residual norm = 1.66603e-09
+
+-------------------- third solver loop -------------------- 
+0 :   residual norm = 0.00174167
+1 :   residual norm = 7.22022e-05
+2 :   residual norm = 2.99315e-06
+3 :   residual norm = 1.24081e-07
+4 :   residual norm = 5.14378e-09
+5 :   residual norm = 2.13235e-10
+6 :   residual norm = 8.8396e-12
+
+Time taken for reading file and creating large matrix = 0.17329
+Time taken for initializing variables for first solver = 0.000541
+Time taken for first solver loop = 25.2686
+Time taken for initializing variables for second solver= 0.000133
+Time take for second solver loop = 25.0668
+Time taken for initializing variables for third solver = 0.000108
+Time taken for third solver loop = 45.8832
