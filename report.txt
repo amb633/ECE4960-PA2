@@ -1,1 +1,31 @@
-This programming assignment focuses on space and compressed matrix implementations, relevant funct
+This programming assignment focuses on space and compressed matrix implementations, relevant functions, test cases, and a final Jacobi solver.
+
+Matrix Implementations: The full and compressed matrix structures and their functions were implemented individually using separate namespaces; in future projects, they can be used independently by calling their appropriate header files. 
+
+Matrix Tests: Both implementations were tested thoroughly for robustness and accuracy. Testing was carried out in a modular manner, where lower order utility functions, such as retrieveElement and scalarMultiple, were tested first, followed by higher order functions like rowPermute and rowScale. Once all the supplementary functions were proven to be accurate, the Jacobi solver implementation was tested. 
+The testing order was as follows:
+- first, the full and compressed matrix structures and functions were tested independently. All functions, including basic utility functions were tested against a known ground truth
+- second, both implementations were tested agains each other (with unknown ground truth). Correlation of answers for both sets of functions validates their implementation based on the Wilkinson principle.
+- third, once the accuracy of both implementations was validated, the compressed matrix utility functions were tested on the large matrix provided.
+
+Jacobi Solver:  The solver was designed to run iteratively until it met a convergence criteria of 1e-7. It was tested on smaller matrices (size 5x5) for both implementations, and was validated to provide identical solutions. Susequently, it was run on the large data set provided, and proved to converge based on the same criteria.
+
+Computational Time: Timestamps were generated in-code to obtain the elapsed time (in seconds) for various functions, given below:
+
+Reading data file and creating compressed matrix: 
+Windows: 1.36
+MacOS:
+
+First Solver Loop (with 1.0 in first position of B vector):
+Windows: 35.1
+MacOS:
+
+Second Solver Loop (with 1.0 in fifth position of B vector):
+Windows: 35.2
+MacOS:
+
+Third Solver Loop (with 1.0 is all positions of B vector):
+Windows: 62.0
+MacOS:
+
+Memory Usage: 
