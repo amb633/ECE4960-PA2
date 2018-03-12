@@ -17,15 +17,15 @@ Windows: 1.36
 MacOS:
 
 First Solver Loop (with 1.0 in first position of B vector):
-Windows: 35.1
+Windows: 35.35
 MacOS:
 
 Second Solver Loop (with 1.0 in fifth position of B vector):
-Windows: 35.2
+Windows: 35.71
 MacOS:
 
 Third Solver Loop (with 1.0 is all positions of B vector):
-Windows: 62.0
+Windows: 61.47
 MacOS:
 
 Memory Usage: 
