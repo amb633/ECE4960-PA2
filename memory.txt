@@ -1,0 +1,22 @@
+Start of the program before reading in input data
+12261  main             0.0  00:00.00 1     0   10+    332K+  0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 413+       94+      23+        11+        107+      48+        3+         0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after reading in input data
+12261  main             0.0  00:09.93 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3654+      97+      24+        11+        408+      65+        665+       0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after constructing compressed matrix of input data
+12261  main             0.0  00:09.93 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3668+      99+      24+        11+        424+      65+        668+       0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after creating compressed matrix LUC from input data
+12261  main             0.0  00:09.93 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3682+      101+     24+        11+        441+      65+        670+       0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after creating vector DC from input data
+12261  main             0.0  00:09.93 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3696+      103+     24+        11+        457+      65+        672+       0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after creating vector b-1 for solver
+12261  main             0.0  00:09.93 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3716+      105+     24+        11+        473+      65+        675+       0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after running the solver-1
+12261  main             0.0  00:35.10 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3763+      107+     25+        11+        494+      65+        1392+      0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after redefining b-2 for the solver
+12261  main             0.0  00:35.10 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3777+      109+     25+        11+        511+      65+        1395+      0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after running the solver-2
+12261  main             0.0  01:00.20 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3791+      111+     27+        11+        532+      65+        1738+      0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after redefining b-3 for the solver
+12261  main             0.0  01:00.20 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3805+      113+     27+        11+        549+      65+        1741+      0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  
+after running the solver-3
+12261  main             0.0  01:44.07 1     0   10+    13M+   0B     0B     12261 10638 sleeping *0[1+]         0.00000 0.00000    501 3848+      115+     29+        11+        573+      65+        2371+      0        0        0.0   0      0      arianabruno        N/A    N/A   N/A   N/A   N/A   N/A  

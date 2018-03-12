@@ -94,6 +94,7 @@ int full::calculateNorm( double& norm , vector<double>* v , vector<double>* Ax )
 		squareSum += temp*temp;
 	}
 	norm = sqrt( squareSum );
+    return 0;
 }
 
 /* decompose AF matrix into diagonal elements (stored in DF) and non-diagonal elements (stored in LUF) */

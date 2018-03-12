@@ -3,6 +3,7 @@
 #include <cmath>
 #include <vector>
 #include <chrono>
+#include <stdlib.h>
 
 #include "compressed_func.hpp"
 #include "full_func.hpp"
@@ -15,6 +16,9 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
+//    system("echo Start of the program before reading in input data > memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     cout << endl;
     cout << "-------------------- testing full matrix functions -------------------- " << endl;   
     test_full::run_full_matrix_tests();
@@ -55,6 +59,9 @@ int main(int argc, char const *argv[])
     }
     cout << "This is the number of col_ids for non-zero values in Mat 1: " << cols.size() << endl;
 
+//    system("echo after reading in input data >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     const int rank = row_ptr.size() - 1;
 
     //1: create row-compressed matrix
@@ -64,13 +71,21 @@ int main(int argc, char const *argv[])
     AC.row_p = row_ptr;
 
     auto end_creation = chrono::system_clock::now();
+//    system("echo after constructing compressed matrix of input data >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
     cout << endl;
 
     //2: decompose matrix to diagonals and LU form
     compressed::comp_r_mat LUC;
+    
+//    system("echo after creating compressed matrix LUC from input data >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
 
     vector<double> DC;
     compressed::decomposeMatrix( &DC , &LUC , &AC );
+    
+//    system("echo after creating vector DC from input data >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
 
     //3: create first B vector and solution vector
     auto first_pre_start = chrono::system_clock::now();
@@ -84,7 +99,10 @@ int main(int argc, char const *argv[])
     }
     B[0] = 1.0;
     X[0] = (1.0/DC[0]);
-
+    
+//    system("echo after creating vector b-1 for solver >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     //4: initialize variables for loop
     double normPrev = 2;
     double normCurrent = 1;
@@ -107,6 +125,9 @@ int main(int argc, char const *argv[])
         cout << "  residual norm = " << normCurrent/normB << endl;
         counter++;
     }
+//    system("echo after running the solver-1 >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     cout << endl;
     auto first_end = chrono::system_clock::now();
 
@@ -119,6 +140,9 @@ int main(int argc, char const *argv[])
     B[0] = 0.0;
     B[4] = 1.0;
     X[4] = (1.0/DC[4]);
+    
+//    system("echo after redefining b-2 for the solver >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
 
     normPrev = 2;
     normCurrent = 1;
@@ -140,6 +164,10 @@ int main(int argc, char const *argv[])
         cout << "  residual norm = " << normCurrent/normB << endl;
         counter++;
     }
+    
+//    system("echo after running the solver-2 >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     cout <<endl;
     auto second_end = chrono::system_clock::now();
 
@@ -151,6 +179,9 @@ int main(int argc, char const *argv[])
         B[i] = 1.0;
     }
 
+//    system("echo after redefining b-3 for the solver >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     normPrev = 2;
     normCurrent = 1;
     normB = 0;
@@ -171,6 +202,10 @@ int main(int argc, char const *argv[])
         cout << "  residual norm = " << normCurrent/normB << endl;
         counter++;
     }
+    
+//    system("echo after running the solver-3 >> memory.txt");
+//    system("top -l 1 | grep --line-buffered main >> memory.txt");
+    
     cout << endl;
     auto third_end = chrono::system_clock::now();
 
