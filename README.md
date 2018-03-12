@@ -1,5 +1,9 @@
 # ECE4960 - Programming Assignment 2 Full & Compressed Matrice and Jacobi Solver
 
+- *report.txt* contains our analysis of the implementation and algorithms
+- *output_log.txt* contains the log of all checks, tests and the solver runs
+- *memory.txt* contains the output of bash commands for memory usage checks
+
 ***************************************************************************
 ## Part 1 - Full Matrix Implementation
 ***************************************************************************
