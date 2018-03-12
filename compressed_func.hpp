@@ -59,15 +59,8 @@ namespace compressed{
 	// returns row_j = row_j + a*row_i
 	void rowScale( comp_r_mat* A , int i , int j , double a );
 
-	// calculates the matrix product of A and vec and stores it in result
-	int matrixProduct ( vector<double>* result , comp_r_mat* A , vector<double>* vec);
-
 	// calculate norm of v - Ax 
 	int calculateNorm( double& norm , vector<double>* v , vector<double>* Ax );
-
-	bool check_sum( comp_r_mat* mat, vector<double>* vec );
-	void reorderMat( comp_r_mat* input, comp_r_mat* reorder_A, comp_r_mat* reorder_B, int R, int C);
-	void columnPermute(comp_r_mat* A, int col1, int col2);	
 
 	// decompose AS matrix into diagonal elements (stored in DS) and non-diagonal elements (stored in LUS)
 	int decomposeMatrix( vector<double>* DS , comp_r_mat* LUS , comp_r_mat* AS );
